@@ -152,46 +152,49 @@ async function processLike( eventId, questionId, rank ) {
         likedQuestions = { "likedQuestions": [] };
     }
 
-    //let alreadyLiked = likedQuestions[ "likedQuestions" ].includes( questionId );
-    //if ( !alreadyLiked ) {
-    //console.log( "Question not liked yet" );
-    //console.log( questionId );
+    let alreadyLiked = likedQuestions[ "likedQuestions" ].includes( questionId );
+    if ( !alreadyLiked ) {
+        //console.log( "Question not liked yet" );
+        //console.log( questionId );
 
-    return await fetch( `/like`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify( { eId: eventId, qId: questionId } ),
-        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
-    } ).then( ( response ) => {
-        //console.log( response );
-        return fetch( `/event/${ eventId }`, {
-            method: "GET",
+        return await fetch( `/like`, {
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
+            body: JSON.stringify( { eId: eventId, qId: questionId } ),
             cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
-        } );
-    } ).then( ( response ) => {
-        console.log( response );
-        return response.json();
-    } ).then( ( json ) => {
-        console.log( json );
+        } ).then( ( response ) => {
+            //console.log( response );
+            return fetch( `/event/${ eventId }`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+            } );
+        } ).then( ( response ) => {
+            //console.log( response );
+            return response.json();
+        } ).then( ( json ) => {
+            //console.log( json );
 
-        let eventArray = [];
-        eventArray.push( json );
+            let eventArray = [];
+            eventArray.push( json );
 
-        //console.log( eventArray );
+            //console.log( eventArray );
 
-        //HACK - need to fix this, something weird with timing of the fetch and the display
-        adjustRanking( eventArray[ 0 ], questionId, rank, 1 );
+            //HACK - need to fix this, something weird with timing of the fetch and the display
+            adjustRanking( eventArray[ 0 ], questionId, rank, 1 );
 
-        displayQuestionDetails( eventArray[ 0 ] );
+            displayQuestionDetails( eventArray[ 0 ] );
 
-        //console.log( "Like Processed:" + eventArray[ 0 ] );
-        //likedQuestions[ "likedQuestions" ].push( questionId );
-        //window.sessionStorage.setItem( "likedQuestions", JSON.stringify( likedQuestions ) );
-    } ).catch( ( error ) => {
-        console.log( error.message );
+            //console.log( "Like Processed:" + eventArray[ 0 ] );
+            likedQuestions[ "likedQuestions" ].push( questionId );
+            window.sessionStorage.setItem( "likedQuestions", JSON.stringify( likedQuestions ) );
+        } ).catch( ( error ) => {
+            console.log( error.message );
+        }
+        );
+    } else {
+        console.log( "Question already liked" );
     }
-    );
 }
 
 async function processDislike( eventId, questionId, rank ) {
@@ -201,45 +204,45 @@ async function processDislike( eventId, questionId, rank ) {
         dislikedQuestions = { "dislikedQuestions": [] };
     }
 
-    //let alreadyDisliked = dislikedQuestions[ "dislikedQuestions" ].includes( questionId );
-    //if ( !alreadyDisliked ) {
+    let alreadyDisliked = dislikedQuestions[ "dislikedQuestions" ].includes( questionId );
+    if ( !alreadyDisliked ) {
 
-    return await fetch( `/dislike`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify( { eId: eventId, qId: questionId } ),
-        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
-    } ).then( ( response ) => {
-        //console.log( response );
-        return fetch( `/event/${ eventId }`, {
-            method: "GET",
+        return await fetch( `/dislike`, {
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
+            body: JSON.stringify( { eId: eventId, qId: questionId } ),
             cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+        } ).then( ( response ) => {
+            //console.log( response );
+            return fetch( `/event/${ eventId }`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+            } );
+        } ).then( ( response ) => {
+            console.log( response );
+            return response.json();
+        } ).then( ( json ) => {
+            console.log( json );
+
+
+            let eventArray = [];
+            eventArray.push( json );
+
+            //console.log( eventArray );
+            adjustRanking( eventArray[ 0 ], questionId, rank, -1 );
+
+            displayQuestionDetails( eventArray[ 0 ] );
+
+            //console.log( "Dislike Processed" );
+            dislikedQuestions[ "dislikedQuestions" ].push( questionId );
+            window.sessionStorage.setItem( "dislikedQuestions", JSON.stringify( dislikedQuestions ) );
+        } ).catch( ( error ) => {
+            console.log( error.message );
         } );
-    } ).then( ( response ) => {
-        console.log( response );
-        return response.json();
-    } ).then( ( json ) => {
-        console.log( json );
-
-
-        let eventArray = [];
-        eventArray.push( json );
-
-        //console.log( eventArray );
-        adjustRanking( eventArray[ 0 ], questionId, rank, -1 );
-
-        displayQuestionDetails( eventArray[ 0 ] );
-
-        //console.log( "Dislike Processed" );
-        //dislikedQuestions[ "dislikedQuestions" ].push( questionId );
-        //window.sessionStorage.setItem( "dislikedQuestions", JSON.stringify( dislikedQuestions ) );
-    } ).catch( ( error ) => {
-        console.log( error.message );
-    } );
-    //} else {
-    //console.log( "Question already disliked" );
-    //}
+    } else {
+        console.log( "Question already disliked" );
+    }
 };
 
 function displayEventDetails( eventDetailCollectionArray ) {
