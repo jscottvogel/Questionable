@@ -8,6 +8,7 @@ const AWS = require( 'aws-sdk' );
 
 const uuid = require( 'uuid' );
 
+require( 'dotenv' ).config( { path: './questionable.env' } );
 
 module.exports = class EventDynamoDBImpl extends EventDAO {
 
@@ -15,8 +16,8 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         super();
 
         // TODO read this from encrypted file
-        let accessKeyId = "";
-        let secretAccessKey = "";
+        let accessKeyId = process.env.KEY;
+        let secretAccessKey = process.env.SECRET;
         AWS.config.credentials = new AWS.Credentials( accessKeyId, secretAccessKey, null );
 
         AWS.config.update( { region: 'us-east-1' } );
