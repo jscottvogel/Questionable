@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question</title>
+    <link rel="stylesheet" href="../style/questionable.css">
+    <script src="../js/question.js"></script>
+</head>
+
+<body onload="loadQuestionInfo();">
+    <div class="header"></div>
+    <div class="main">
+        <div class="container">
+            <form action="addquestion" onsubmit="event.preventDefault();submitNewQuestion()">
+                <h1>Question Info</h1>
+                <table class="table" id="questioninfotable">
+                </table>
+                <input type="text" id="question" name="question" placeholder="Enter a question">
+                <input type="reset" value="Discard">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+    <div class="footer"></div>
+
+</body>
+
+</html>
