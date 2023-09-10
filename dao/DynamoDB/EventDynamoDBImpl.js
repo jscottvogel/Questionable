@@ -15,8 +15,8 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         super();
 
         // TODO read this from encrypted file
-        let accessKeyId = "AKIAXSLXH5GYZV4ZGDFS";
-        let secretAccessKey = "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";
+        let accessKeyId = "";
+        let secretAccessKey = "";
         AWS.config.credentials = new AWS.Credentials( accessKeyId, secretAccessKey, null );
 
         AWS.config.update( { region: 'us-east-1' } );

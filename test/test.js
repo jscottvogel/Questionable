@@ -3,8 +3,8 @@ const dynamoose = require( "dynamoose" );
 
 const ddb = new dynamoose.aws.ddb.DynamoDB( {
     "credentials": {
-        "accessKeyId": "AKIAXSLXH5GYZV4ZGDFS",
-        "secretAccessKey": "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"
+        "accessKeyId": "",
+        "secretAccessKey": ""
     },
     "region": "us-east-1"
 } );
