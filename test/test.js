@@ -1,10 +1,12 @@
 // for dynamodb
 const dynamoose = require( "dynamoose" );
 
+require( 'dotenv' ).config( { path: './questionable.env' } );
+
 const ddb = new dynamoose.aws.ddb.DynamoDB( {
     "credentials": {
-        "accessKeyId": "",
-        "secretAccessKey": ""
+        "accessKeyId": process.env.KEY,
+        "secretAccessKey": process.env.SECRET
     },
     "region": "us-east-1"
 } );

@@ -97,7 +97,7 @@ server.put( '/event/:id', function ( req, res ) {
     // save or update the event
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
-    Promise.all( [ controllerFactory.getEventController().findEventByIdAndUpdate( req.body ) ] ).then( ( results ) => {
+    Promise.all( [ controllerFactory.getEventController().addQuestion( req.body ) ] ).then( ( results ) => {
         //console.log( results );
         res.set( 'Cache-Control', 'no-store' );
         res.status( 200 ).send( results );

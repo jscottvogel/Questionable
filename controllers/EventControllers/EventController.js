@@ -23,8 +23,8 @@ module.exports = class EventController {
         return this.eventDB.findEvents();
     }
 
-    findEventByIdAndUpdate( eId, event ) {
-        return this.eventDB.findEventByIdAndUpdate( eId, event );
+    addQuestion( event ) {
+        return this.eventDB.addQuestion( event );
     }
 
 

@@ -51,9 +51,13 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         } );
     }
 
-    findEventByIdAndUpdate( evts ) {
+    addQuestion( evts ) {
         return new Promise( ( resolve, reject ) => {
             //console.log( evts[ 0 ] );
+
+
+            let newQuestion = evts[ 0 ].questions[ evts[ 0 ].questions.length - 1 ];
+            //console.log( newQuestion );
 
             evts[ 0 ].questions.forEach( ( q ) => {
                 //console.log( "Checking Questions..." );
@@ -64,25 +68,21 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
                 }
             } );
 
-            // all good to here
-
-            // TODO configure this to use the event model and save only the new questions
             let params = {
                 TableName: "Event",
-                Item: {
-                    "id": evts[ 0 ].id,
-                    "name": evts[ 0 ].name,
-                    "eventDate": evts[ 0 ].eventDate,
-                    "createdDate": evts[ 0 ].createdDate,
-                    "lastModifiedDate": evts[ 0 ].lastModifiedDate,
-                    "questions": evts[ 0 ].questions
+                Key: {
+                    "id": evts[ 0 ].id
                 },
-                ReturnValues: "ALL_OLD"
+                UpdateExpression: "set questions = list_append(questions, :i)",
+                ExpressionAttributeValues: {
+                    ':i': [ newQuestion ],
+                },
+                ReturnValues: "UPDATED_NEW"
             };
 
-            this.client.put( params ).promise().then( ( results ) => {
+            this.client.update( params ).promise().then( ( results ) => {
                 //console.log( results );
-                resolve( evts[ 0 ] );
+                resolve( results );
             } ).catch( ( error ) => {
                 console.log( error );
                 reject( error );

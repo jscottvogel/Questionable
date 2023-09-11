@@ -6,7 +6,7 @@ module.exports = class EventDAO {
         throw new Error( 'findEvent() not implemented' );
     }
 
-    findEventByIdAndUpdate( id, event ) {
+    addQuestion( event ) {
         throw new Error( 'findEvent() not implemented' );
     }
 
