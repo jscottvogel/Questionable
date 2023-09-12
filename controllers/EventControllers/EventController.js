@@ -23,10 +23,21 @@ module.exports = class EventController {
         return this.eventDB.findEvents();
     }
 
-    addQuestion( event ) {
-        return this.eventDB.addQuestion( event );
+    addQuestion( eventId, question ) {
+        return this.eventDB.addQuestion( eventId, question );
     }
 
+    createEvent( event ) {
+        return this.eventDB.createEvent( event );
+    }
+
+    updateEvent( event ) {
+        return this.eventDB.updateEvent( event );
+    }
+
+    deleteEvent( eventId ) {
+        return this.eventDB.deleteEvent( eventId );
+    }
 
 
 }

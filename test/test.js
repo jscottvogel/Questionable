@@ -1,35 +1,35 @@
-// for dynamodb
-const dynamoose = require( "dynamoose" );
-
-require( 'dotenv' ).config( { path: './questionable.env' } );
-
-const ddb = new dynamoose.aws.ddb.DynamoDB( {
-    "credentials": {
-        "accessKeyId": process.env.KEY,
-        "secretAccessKey": process.env.SECRET
-    },
-    "region": "us-east-1"
-} );
-
-// Set DynamoDB instance to the Dynamoose DDB instance
-dynamoose.aws.ddb.set( ddb );
+const path = require( 'path' );
 
 
-//const mongoose = require( 'mongoose' );
-
-const uuid = require( 'uuid' );
-
-const Event = require( './models/Event' );
-
-//mongoose.connect( 'mongodb://localhost:27017/questionable', { useNewUrlParser: true, useUnifiedTopology: true } );
+const controllerFactory = require( '../controllers/ControllerFactory' );
+require( '../controllers/EventControllers/EventController' );
 
 try {
-    Event.create( {
-        "id": uuid.v4(),
-        "name": 'The Big Event',
-        "eventDate": new Date( '2020-01-01' ),
-        "questions": [ { "qid": uuid.v4(), "question": "Are you a Cowboys fan?", "ranking": 0 }, { "qid": uuid.v4(), "question": "What is your name?", "ranking": 5 } ]
+    /*
+        Event.create( {
+            "id": uuid.v4(),
+            "name": 'The Big Event',
+            "eventDate": new Date( '2020-01-01' ),
+            "questions": [ { "qid": uuid.v4(), "question": "Are you a Cowboys fan?", "ranking": 0 }, { "qid": uuid.v4(), "question": "What is your name?", "ranking": 5 } ]
+        } );
+        */
+
+    testCreateEvent = async () => {
+        let event = {
+            "id": uuid.v4(),
+            "name": 'Event Two',
+            "eventDate": new Date( '2023-09-01' ),
+            "questions": [ { "qid": uuid.v4(), "question": "What is up?", "ranking": 0 }, { "qid": uuid.v4(), "question": "What is you favorite color?", "ranking": 0 } ]
+        };
+        return await controllerFactory.getEventController().createEvent( event );
+    }
+
+    testCreateEvent().then( ( results ) => {
+        console.log( results );
+    } ).catch( ( error ) => {
+        console.log( error );
     } );
+
 } catch ( err ) {
     console.log( err );
 }

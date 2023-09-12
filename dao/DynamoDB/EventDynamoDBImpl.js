@@ -51,31 +51,22 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         } );
     }
 
-    addQuestion( evts ) {
+    addQuestion( evtId, question ) {
         return new Promise( ( resolve, reject ) => {
-            //console.log( evts[ 0 ] );
+            //console.log( question );
 
-
-            let newQuestion = evts[ 0 ].questions[ evts[ 0 ].questions.length - 1 ];
-            //console.log( newQuestion );
-
-            evts[ 0 ].questions.forEach( ( q ) => {
-                //console.log( "Checking Questions..." );
-                //console.log( q );
-                if ( q.qid == undefined || q.qid == null ) {
-                    q.qid = uuid.v4();
-                    //console.log( q );
-                }
-            } );
+            if ( question.qid == undefined || question.qid == null ) {
+                question.qid = uuid.v4();
+            }
 
             let params = {
                 TableName: "Event",
                 Key: {
-                    "id": evts[ 0 ].id
+                    "id": evtId
                 },
                 UpdateExpression: "set questions = list_append(questions, :i)",
                 ExpressionAttributeValues: {
-                    ':i': [ newQuestion ],
+                    ':i': [ question ],
                 },
                 ReturnValues: "UPDATED_NEW"
             };
@@ -98,16 +89,76 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         return this.client.scan( params ).promise();
     }
 
-    async createEvent() {
-        throw new Error( 'createEvent() not implemented' );
+    createEvent( event ) {
+        return new Promise( ( resolve, reject ) => {
+            let params = {
+                TableName: "Event",
+                Item: {
+                    id: event.id,
+                    name: event.name,
+                    eventDate: event.eventDate,
+                    questions: event.questions
+                }
+            };
+
+            // all good to here
+            return this.client.put( params ).promise();
+        } ).then( ( results ) => {
+            console.log( results );
+            resolve( results );
+        } ).catch( ( error ) => {
+            console.log( error );
+            reject( error );
+        } );
     }
 
-    async updateEvent() {
-        throw new Error( 'updateEvent() not implemented' );
+    updateEvent( event ) {
+        return new Promise( ( resolve, reject ) => {
+            let params = {
+                TableName: "Event",
+                Key: {
+                    "id": event.id
+                },
+                UpdateExpression: "SET #n = :nm, eventDate = :dt",
+                ExpressionAttributeValues: {
+                    ":nm": event.name,
+                    ":dt": event.eventDate
+                },
+                ExpressionAttributeNames: {
+                    "#n": "name"
+                }
+            };
+
+            // all good to here
+            return this.client.update( params ).promise();
+        } ).then( ( results ) => {
+            //console.log( results );
+            resolve( results );
+        } ).catch( ( error ) => {
+            console.log( error );
+            reject( error );
+        } );
     }
 
-    async deleteEvent() {
-        throw new Error( 'deleteEvent() not implemented' );
+    deleteEvent( eventId ) {
+        //console.log( "Deleting Event: " + eventId );
+        return new Promise( ( resolve, reject ) => {
+            let params = {
+                TableName: "Event",
+                Key: {
+                    "id": eventId
+                }
+            };
+
+            // all good to here
+            return this.client.delete( params ).promise();
+        } ).then( ( results ) => {
+            //console.log( results );
+            resolve( results );
+        } ).catch( ( error ) => {
+            console.log( error );
+            reject( error );
+        } );
     }
 
     likeQuestion( eventId, questionId ) {

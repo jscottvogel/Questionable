@@ -65,10 +65,10 @@ async function submitNewQuestion() {
         //console.log( eventInfo[ 0 ] );
 
         // update the event
-        return fetch( `/event/${ eventId }`, {
-            method: "PUT",
+        return fetch( `/event/${ eventId }/question`, {
+            method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify( eventInfo ),
+            body: JSON.stringify( { "question": question, "ranking": 0 } ),
             cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
         } )
     } ).then( ( response ) => {

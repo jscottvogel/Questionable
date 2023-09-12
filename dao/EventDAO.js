@@ -3,34 +3,34 @@
 module.exports = class EventDAO {
 
     findEventById( id ) {
-        throw new Error( 'findEvent() not implemented' );
+        throw new Error( 'function not implemented' );
     }
 
-    addQuestion( event ) {
-        throw new Error( 'findEvent() not implemented' );
+    addQuestion( eventId, question ) {
+        throw new Error( 'function not implemented' );
     }
 
     findEvents() {
-        throw new Error( 'findEvents() not implemented' );
+        throw new Error( 'function not implemented' );
     }
 
-    async createEvent() {
-        throw new Error( 'createEvent() not implemented' );
+    createEvent( event ) {
+        throw new Error( 'function not implemented' );
     }
 
-    async updateEvent() {
-        throw new Error( 'updateEvent() not implemented' );
+    updateEvent( event ) {
+        throw new Error( 'function not implemented' );
     }
 
-    async deleteEvent() {
-        throw new Error( 'deleteEvent() not implemented' );
+    deleteEvent( eventId ) {
+        throw new Error( 'function not implemented' );
     }
 
     likeQuestion( eventId, questionId ) {
-        throw new Error( 'likeQuestion() not implemented' );
+        throw new Error( 'function not implemented' );
     }
 
     dislikeQuestion( eventId, questionId ) {
-        throw new Error( 'dislikeQuestion() not implemented' );
+        throw new Error( 'function not implemented' );
     }
 }

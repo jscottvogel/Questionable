@@ -1,5 +1,6 @@
 const express = require( 'express' );
 const path = require( 'path' );
+const uuid = require( 'uuid' );
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -15,6 +16,7 @@ server.use( express.json() );
 server.use( express.urlencoded() );
 
 const controllerFactory = require( './controllers/ControllerFactory' );
+const { request } = require( 'http' );
 require( './controllers/EventControllers/EventController' );
 
 //app.route( '/*' )
@@ -93,11 +95,11 @@ server.get( '/event/:id', function ( req, res ) {
     } );
 } );
 
-server.put( '/event/:id', function ( req, res ) {
+server.post( '/event/:id/question', function ( req, res ) {
     // save or update the event
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
-    Promise.all( [ controllerFactory.getEventController().addQuestion( req.body ) ] ).then( ( results ) => {
+    Promise.all( [ controllerFactory.getEventController().addQuestion( req.params.id, req.body ) ] ).then( ( results ) => {
         //console.log( results );
         res.set( 'Cache-Control', 'no-store' );
         res.status( 200 ).send( results );
@@ -107,5 +109,81 @@ server.put( '/event/:id', function ( req, res ) {
     } );
 } );
 
+server.put( '/event', function ( req, res ) {
+    // save or update the event
+    //console.log( "Updating Event By Id: " + req.params.id )
+    //console.log( req.body );
+    Promise.all( [ controllerFactory.getEventController().updateEvent( req.body ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+} );
 
+server.post( '/event', function ( req, res ) {
+    // save or update the event
+    //console.log( req.body );
+    Promise.all( [ controllerFactory.getEventController().createEvent( req.body ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+} );
 
+/*
+server.get( '/testcreate', function ( req, res ) {
+
+    let event = {
+        "id": uuid.v4(),
+        "name": 'Event Two',
+        "eventDate": new Date( '2023-09-01' ).toUTCString(),
+        "questions": [ { "qid": uuid.v4(), "question": "What is up?", "ranking": 0 }, { "qid": uuid.v4(), "question": "What is you favorite color?", "ranking": 0 } ]
+    };
+
+    Promise.all( [ controllerFactory.getEventController().createEvent( event ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+
+} );
+
+server.get( '/testdelete/:id', function ( req, res ) {
+
+    Promise.all( [ controllerFactory.getEventController().deleteEvent( req.params.id ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+
+} );
+
+server.get( '/testupdate/:id', function ( req, res ) {
+    let event = {
+        "id": req.params.id,
+        "name": 'Updated Event',
+        "eventDate": new Date().toUTCString(),
+    };
+
+    Promise.all( [ controllerFactory.getEventController().updateEvent( event ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+} );
+*/
