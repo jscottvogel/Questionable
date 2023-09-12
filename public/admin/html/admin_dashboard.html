@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="../js/admin.js"></script>
+    <link rel="stylesheet" href="../style/questionable.css">
+</head>
+
+<body onload="listEvents();">
+    <div class="header"></div>
+    <div class="main">
+        <div class="container">
+            <form name="admineventForm" action="" onsubmit="event.preventDefault();">
+                <h1 id="admineventhistory">All Events</h1>
+                <table class="table">
+                    <tbody id="admineventstable">
+                        <tr>
+                            <th>Event Id</th>
+                            <th>Event Name</th>
+                            <th>Event Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="button">
+                    <button type="button" onclick="window.location.href='/admin/add'">Add Event</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer"></div>
+
+</body>
+
+</html>

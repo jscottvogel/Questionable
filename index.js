@@ -37,6 +37,14 @@ server.get( '/', function ( req, res ) {
     res.sendFile( 'public/html/view_eventhistory.html', { root: __dirname } );
 } );
 
+server.get( "/admin", ( req, res ) => {
+    res.sendFile( 'public/admin/html/admin_dashboard.html', { root: __dirname } );
+} );
+
+server.get( "/admin/add", ( req, res ) => {
+    res.sendFile( 'public/admin/html/admin_add_event.html', { root: __dirname } );
+} );
+
 server.get( '/events', function ( req, res ) {
     // this will return all events 
     // TODO - add code to return only events for the signed in user

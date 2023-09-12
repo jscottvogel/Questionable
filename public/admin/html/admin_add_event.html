@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Event</title>
+    <script src="../js/admin.js"></script>
+    <link rel="stylesheet" href="../style/questionable.css">
+</head>
+
+<body>
+    <div class="header"></div>
+    <div class="main">
+        <div class="container">
+            <form name="addeventForm" onsubmit="event.preventDefault();addEvent();">
+                <h1 id="adminaddevent">Add Event</h1>
+                <input type="text" id="eventname" name="eventname" placeholder="Event Name" required>
+                <input type="date" id="eventdate" name="eventdate" placeholder="Event Date" required>
+                <input type="submit" value="Add Event">
+            </form>
+        </div>
+    </div>
+    <div class="footer"></div>
+
+</body>
+
+</html>

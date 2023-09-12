@@ -91,6 +91,11 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
 
     createEvent( event ) {
         return new Promise( ( resolve, reject ) => {
+
+            if ( event.id == undefined || event.id == null ) {
+                event.id = uuid.v4();
+            }
+
             let params = {
                 TableName: "Event",
                 Item: {
