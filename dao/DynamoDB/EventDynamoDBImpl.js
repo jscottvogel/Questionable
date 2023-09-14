@@ -107,13 +107,13 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
             };
 
             // all good to here
-            return this.client.put( params ).promise();
-        } ).then( ( results ) => {
-            console.log( results );
-            resolve( results );
-        } ).catch( ( error ) => {
-            console.log( error );
-            reject( error );
+            this.client.put( params ).promise().then( ( results ) => {
+                //console.log( results );
+                resolve( results );
+            } ).catch( ( error ) => {
+                console.log( error );
+                reject( error );
+            } );
         } );
     }
 
@@ -135,13 +135,13 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
             };
 
             // all good to here
-            return this.client.update( params ).promise();
-        } ).then( ( results ) => {
-            //console.log( results );
-            resolve( results );
-        } ).catch( ( error ) => {
-            console.log( error );
-            reject( error );
+            this.client.update( params ).promise().then( ( results ) => {
+                //console.log( results );
+                resolve( results );
+            } ).catch( ( error ) => {
+                console.log( error );
+                reject( error );
+            } );
         } );
     }
 
@@ -156,13 +156,13 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
             };
 
             // all good to here
-            return this.client.delete( params ).promise();
-        } ).then( ( results ) => {
-            //console.log( results );
-            resolve( results );
-        } ).catch( ( error ) => {
-            console.log( error );
-            reject( error );
+            this.client.delete( params ).promise().then( ( results ) => {
+                //console.log( results );
+                resolve( results );
+            } ).catch( ( error ) => {
+                console.log( error );
+                reject( error );
+            } );
         } );
     }
 

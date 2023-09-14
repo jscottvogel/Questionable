@@ -38,11 +38,19 @@ server.get( '/', function ( req, res ) {
 } );
 
 server.get( "/admin", ( req, res ) => {
-    res.sendFile( 'public/admin/html/admin_dashboard.html', { root: __dirname } );
+    res.sendFile( 'public/html/admin_dashboard.html', { root: __dirname } );
 } );
 
 server.get( "/admin/add", ( req, res ) => {
-    res.sendFile( 'public/admin/html/admin_add_event.html', { root: __dirname } );
+    res.sendFile( 'public/html/admin_add_event.html', { root: __dirname } );
+} );
+
+server.get( "/admin/update", ( req, res ) => {
+    res.sendFile( 'public/html/admin_update_event.html', { root: __dirname } );
+} );
+
+server.get( "/admin/moderate", ( req, res ) => {
+    res.sendFile( 'public/html/admin_moderate_event.html', { root: __dirname } );
 } );
 
 server.get( '/events', function ( req, res ) {
@@ -143,6 +151,20 @@ server.post( '/event', function ( req, res ) {
         res.send( {} );
     } );
 } );
+
+server.delete( '/event/:id', function ( req, res ) {
+    // save or update the event
+    //console.log( req.body );
+    Promise.all( [ controllerFactory.getEventController().deleteEvent( req.params.id ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+} );
+
 
 /*
 server.get( '/testcreate', function ( req, res ) {
