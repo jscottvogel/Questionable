@@ -174,6 +174,10 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         return this.processIncr( eventId, questionId, -1 );
     }
 
+    adjustQuestionRanking( eId, qId, adjustment ) {
+        return this.processIncr( eventId, questionId, adjustment );
+    }
+
     processIncr( eventId, questionId, incr ) {
         return new Promise( ( resolve, reject ) => {
             let params = {

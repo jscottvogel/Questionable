@@ -1,2 +1,5 @@
 *.env
 node_modules/*
+server/node_modules/*
+questionable-client/node_modules/*
+

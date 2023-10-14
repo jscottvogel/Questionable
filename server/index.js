@@ -3,7 +3,7 @@ const path = require( 'path' );
 const uuid = require( 'uuid' );
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 3500;
 
 const server = express();
 server.set( 'etag', false );
@@ -91,6 +91,22 @@ server.patch( '/dislike', function ( req, res ) {
         //console.log( results );
         res.set( 'Cache-Control', 'no-store' );
         res.status( 200 ).send( "Updated" );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.status( 500 ).send( {} );
+    } );
+} );
+
+server.patch( '/event/:id/question/:qid/ranking', function ( req, res ) {
+    // search for questions associated with the event
+    // fetch the question
+    Promise.all( [ controllerFactory.getEventController().adjustQuestionRanking( req.params.id, req.params.qid, req.body.adjustment ) ] ).then( ( results ) => {
+        //console.log( results );
+
+        // send 200 response
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( "Updated" );
+
     } ).catch( ( error ) => {
         console.log( error );
         res.status( 500 ).send( {} );

@@ -15,6 +15,10 @@ module.exports = class EventController {
         return this.eventDB.dislikeQuestion( eId, qId );
     }
 
+    adjustQuestionRanking( eId, qId, adjustment ) {
+        return this.eventDB.adjustQuestionRanking( eId, qId, adjustment );
+    }
+
     findEventById( eId ) {
         return this.eventDB.findEventById( eId );
     }

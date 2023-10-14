@@ -33,4 +33,8 @@ module.exports = class EventDAO {
     dislikeQuestion( eventId, questionId ) {
         throw new Error( 'function not implemented' );
     }
+
+    adjustQuestionRanking( eventId, questionId, adjustment ) {
+        throw new Error( 'function not implemented' );
+    }
 }
