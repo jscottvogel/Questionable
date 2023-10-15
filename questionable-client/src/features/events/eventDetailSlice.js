@@ -46,46 +46,41 @@ const eventDetailSlice = createSlice( {
                     console.log( error );
                 } );
         },
-        processAdjustment: ( state, action ) => {
-            const [ eventId, questionId, adjustment ] = action.payload;
+        adjustQuestionRanking: ( state, action ) => {
+            //console.log( action.payload );
 
-            return fetch( `/event/:id/question/:qid/ranking`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify( { eId: eventId, qId: questionId } ),
-                cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
-            } ).then( ( response ) => {
-                //console.log( response );
-                return fetch( `/event/${ eventId }`, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                    cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+            const { eventId, questionId, adjustment } = action.payload;
+            //console.log( "Adjusting question ranking for event " + eventId + " and question " + questionId + " by " + adjustment );
+
+            const event = state.currentEvent;
+
+            if ( event.id === eventId ) {
+                //console.log( "Event id matches" );
+
+                const question = event.questions.find( q => q.qid === questionId );
+
+                //console.log( "Adjusting question for question " + JSON.stringify( question ) );
+                //console.log( "Adjusting question ranking " + adjustment );
+
+                question.ranking += adjustment;
+
+                //console.log( "Question ranking is now " + question.ranking );
+
+                // sort the questions by ranking
+                event.questions.sort( ( a, b ) => {
+                    if ( a.ranking < b.ranking ) {
+                        return 1;
+                    } else if ( a.ranking > b.ranking ) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
                 } );
-            } ).then( ( response ) => {
-                //console.log( response );
-                return response.json();
-            } ).then( ( json ) => {
-                //console.log( json );
 
-                /*
-                            let eventArray = [];
-                            eventArray.push( json );
-                
-                            //console.log( eventArray );
-                
-                            //HACK - need to fix this, something weird with timing of the fetch and the display
-                            adjustRanking( eventArray[ 0 ], questionId, rank, 1 );
-                
-                            displayQuestionDetails( eventArray[ 0 ] );
-                
-                            //console.log( "Like Processed:" + eventArray[ 0 ] );
-                            likedQuestions[ "likedQuestions" ].push( questionId );
-                            window.sessionStorage.setItem( "likedQuestions", JSON.stringify( likedQuestions ) );
-                */
-            } ).catch( ( error ) => {
-                console.log( error.message );
+                // update the state
+                //console.log( "Updating state" );
+                state.currentEvent = event;
             }
-            );
         }
     }
 } );
@@ -103,9 +98,31 @@ const fetchEventDetail = ( dispatch, getState, id ) => {
     // todo, error condition
 }
 
-export const { loadEventDetail, addQuestion, processAdjustment } = eventDetailSlice.actions;
+const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
+    console.log( "Making Adjustment: " + adjustment );
+    return fetch( `/event/${ eventId }/question/${ questionId }/ranking`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify( { "adjustment": adjustment } ),
+        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+    } ).then( ( response ) => {
+        // cehck to see if the response is ok
+        if ( !response.ok ) {
+            throw new Error( "HTTP error, status = " + response.status );
+        }
 
-export { fetchEventDetail };
+        // otherwise, update the state
+        //console.log( "Adjustment value is " + adjustment );
+        dispatch( { type: "currentEvent/adjustQuestionRanking", payload: { "eventId": eventId, "questionId": questionId, "adjustment": adjustment } } );
+    } ).catch( ( error ) => {
+        console.log( error );
+    }
+    );
+}
+
+export const { loadEventDetail, addQuestion, adjustQuestionRanking } = eventDetailSlice.actions;
+
+export { fetchEventDetail, processAdjustment };
 
 export default eventDetailSlice.reducer;
 
