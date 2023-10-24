@@ -28,7 +28,7 @@ function AdminDashboard() {
                         {
                             <Button onClick={ () => { navigate( `/admin/event` ) } }>Add Event</Button>
                         }
-                        { eventState.events.map( event => (
+                        { eventState.events.filter( event => event.isActive === true ).map( event => (
                             <Card border="secondary"
                                 bg={ 'light' }
                                 key={ event.id }>
