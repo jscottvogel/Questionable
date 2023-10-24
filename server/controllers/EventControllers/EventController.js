@@ -15,6 +15,10 @@ module.exports = class EventController {
         return this.eventDB.dislikeQuestion( eId, qId );
     }
 
+    adjustQuestionRanking( eId, qId, adjustment ) {
+        return this.eventDB.adjustQuestionRanking( eId, qId, adjustment );
+    }
+
     findEventById( eId ) {
         return this.eventDB.findEventById( eId );
     }
@@ -25,6 +29,10 @@ module.exports = class EventController {
 
     addQuestion( eventId, question ) {
         return this.eventDB.addQuestion( eventId, question );
+    }
+
+    updateQuestion( eventId, question ) {
+        return this.eventDB.updateQuestion( eventId, question );
     }
 
     createEvent( event ) {
@@ -39,5 +47,7 @@ module.exports = class EventController {
         return this.eventDB.deleteEvent( eventId );
     }
 
-
+    updateQuestionApproval( evtId, question, approvedVal ) {
+        return this.eventDB.updateQuestionApproval( evtId, question, approvedVal );
+    }
 }

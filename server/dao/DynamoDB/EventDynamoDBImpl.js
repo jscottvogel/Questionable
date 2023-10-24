@@ -81,6 +81,75 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         } );
     }
 
+    updateQuestionApproval( evtId, questionId, approvedVal ) {
+        return new Promise( ( resolve, reject ) => {
+            let params = {
+                TableName: "Event",
+                Key: {
+                    "id": evtId
+                }
+            };
+
+            this.client.get( params ).promise().then( ( data ) => {
+                //console.log( data );
+                //console.log( data.Item );
+
+                let event = data.Item;
+                // find the index of the question
+                let index = event.questions.findIndex( ( q ) => {
+                    //console.log( q.qid );
+                    return ( q.qid === questionId );
+                }
+                );
+
+                //console.log( values );
+                //console.log( values[ 0 ] );
+                //console.log( values[ 1 ] );
+
+                // modify the approval state
+                let vd = {
+                    "index": index,
+                    "event": event
+                };
+
+                return ( vd );
+
+            } ).then( ( values ) => {
+                //console.log( "Index = " + values.index );
+                //console.log( "Event Id = " + values.event.id );
+                //console.log( "Approved = " + approvedVal );
+
+                let params = {
+                    TableName: "Event",
+                    Key: {
+                        "id": evtId
+                    },
+                    UpdateExpression: "SET questions[" + values.index + "].approved = :appr",
+                    ExpressionAttributeValues: {
+                        ":appr": approvedVal
+                    }
+                };
+                // all good to here
+                this.client.update( params ).promise().then( ( results ) => {
+                    //console.log( results );
+                    values.event.questions[ values.index ].approved = approvedVal;
+                    resolve( results );
+                } ).catch( ( error ) => {
+                    console.log( error );
+                    reject( error );
+                } );
+
+                //console.log( values.event );
+                // this is good. but return the result of the update
+                resolve( values.event );
+            } ).catch( ( error ) => {
+                console.log( error );
+                reject( error );
+            } );
+
+        } );
+    }
+
     findEvents() {
         let params = {
             TableName: "Event"
@@ -102,6 +171,8 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
                     id: event.id,
                     name: event.name,
                     eventDate: event.eventDate,
+                    isActive: event.isActive ? event.isActive : false,
+                    description: event.description ? event.description : "",
                     questions: event.questions
                 }
             };
@@ -124,10 +195,12 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
                 Key: {
                     "id": event.id
                 },
-                UpdateExpression: "SET #n = :nm, eventDate = :dt",
+                UpdateExpression: "SET #n = :nm, eventDate = :dt, isActive = :is, description = :desc",
                 ExpressionAttributeValues: {
                     ":nm": event.name,
-                    ":dt": event.eventDate
+                    ":dt": event.eventDate,
+                    ":is": event.isActive ? event.isActive : false,
+                    ":desc": event.description ? event.description : ""
                 },
                 ExpressionAttributeNames: {
                     "#n": "name"
@@ -146,6 +219,25 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
     }
 
     deleteEvent( eventId ) {
+        //console.log( "Deleting Event: " + eventId );
+        return new Promise( ( resolve, reject ) => {
+            let evt = this.findEventById( eventId );
+
+            evt.then( ( data ) => {
+                //console.log( data );
+
+                data.isActive = false;
+
+                //console.log( results );
+                resolve( this.updateEvent( data ) );
+            } ).catch( ( error ) => {
+                console.log( error );
+                reject( error );
+            } );
+        } );
+    }
+
+    hardDeleteEvent( eventId ) {
         //console.log( "Deleting Event: " + eventId );
         return new Promise( ( resolve, reject ) => {
             let params = {
@@ -172,6 +264,10 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
 
     dislikeQuestion( eventId, questionId ) {
         return this.processIncr( eventId, questionId, -1 );
+    }
+
+    adjustQuestionRanking( eId, qId, adjustment ) {
+        return this.processIncr( eId, qId, adjustment );
     }
 
     processIncr( eventId, questionId, incr ) {
