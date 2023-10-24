@@ -1,43 +1,37 @@
-import React from "react";
 import { useState } from "react"
-import { AuthContext } from "../AuthContext"
-import { useContext } from "react"
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
+import { signUp } from "../auth"
 
-
-export default function LoginPage() {
+export default function SignUp() {
     const [ username, setUsername ] = useState( "" )
+    const [ email, setEmail ] = useState( "" )
     const [ password, setPassword ] = useState( "" )
     const [ error, setError ] = useState( "" )
-    const navigate = useNavigate();
-
-
-    const { user, signIn } = useContext( AuthContext )
-
+    const [ success, setSuccess ] = useState( false )
 
     const handleSubmit = async ( e ) => {
         e.preventDefault()
         setError( "" )
 
         try {
-            await signIn( username, password )
-            // Redirect to the app's main page or dashboard
+            await signUp( username, email, password )
+            setSuccess( true )
         } catch ( err ) {
             setError( err.message )
         }
+    }
 
-        // If the user is logged in, don't show the login form
-        if ( user ) {
-            // Redirect to the admin dashboard page
-            return navigate( "/admin" );
-        }
-
+    if ( success ) {
+        return (
+            <div>
+                <h2>SignUp successful!</h2>
+                <p>Please check your email for the confirmation code.</p>
+            </div>
+        )
     }
 
     return (
         <div>
-            <h2>Admin Login</h2>
+            <h2>SignUp</h2>
             <form onSubmit={ handleSubmit }>
                 <input
                     type="text"
@@ -46,18 +40,20 @@ export default function LoginPage() {
                     onChange={ ( e ) => setUsername( e.target.value ) }
                 />
                 <input
+                    type="email"
+                    placeholder="Email"
+                    value={ email }
+                    onChange={ ( e ) => setEmail( e.target.value ) }
+                />
+                <input
                     type="password"
                     placeholder="Password"
                     value={ password }
                     onChange={ ( e ) => setPassword( e.target.value ) }
                 />
-                <button type="submit">Login</button>
+                <button type="submit">SignUp</button>
             </form>
             { error && <p>{ error }</p> }
-
-            <Link to="/forgot-password">Forgot Password</Link>
-
         </div>
     )
 }
-

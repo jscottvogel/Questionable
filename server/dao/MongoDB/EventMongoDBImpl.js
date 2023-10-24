@@ -62,4 +62,7 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
         throw new Error( 'adjustQuestionRanking() not implemented' );
     }
 
+    updateQuestionApproval( evtId, question, approvedVal ) {
+        throw new Error( 'updateQuestionApproval() not implemented' );
+    }
 }

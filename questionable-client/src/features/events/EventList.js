@@ -26,14 +26,17 @@ function EventList() {
                 <h2 className="md-auto text-center p-4">Upcoming Events</h2>
                 <Row className="mb-3">
                     <Col className="mb-3">
-                        { eventState.events.map( event => (
+                        { eventState.events.filter( event => event.isActive === true ).map( event => (
                             <Card border="secondary"
                                 bg={ 'light' }
                                 key={ event.id }>
                                 <Card.Body>
                                     <Card.Title >{ event.name }</Card.Title>
                                     <Card.Body >
-                                        { event.date }
+                                        { event.description }
+                                        <br></br>
+                                        { event.eventDate }
+                                        <br></br>
                                     </Card.Body>
                                     {
                                         <Button onClick={ () => { navigate( `/event/${ event.id }` ) } }>View Details</Button>

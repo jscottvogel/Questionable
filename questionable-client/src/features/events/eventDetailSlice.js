@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const proxyHost = '127.0.0.1';
+const proxyPort = 3500;
+
+// Proxy URL
+const proxyUrl = `http://${ proxyHost }:${ proxyPort }`;
+
 const initialState = {};
 
 const eventDetailSlice = createSlice( {
@@ -25,14 +31,18 @@ const eventDetailSlice = createSlice( {
         addQuestion: ( state, action ) => {
             // add the question to the event
 
-            fetch( `/event/${ state.currentEvent.id }/question`, {
+            //console.log( "Adding question to event" );
+
+            //debugger
+            fetch( `http://127.0.0.1:3500/event/${ state.currentEvent.id }/question`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify( { "question": action.payload, "ranking": 0 } ),
+                body: JSON.stringify( { "qid": null, "question": action.payload, "ranking": 0, "approved": false } ),
                 cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
             } ).then( response => response.json() )
                 .then( ( temp ) => {
-                    return fetch( `/event/${ state.currentEvent.id }`, {
+                    //debugger
+                    return fetch( `http://127.0.0.1:3500/event/${ state.currentEvent.id }`, {
                         method: "GET",
                         headers: { "Content-Type": "application/json" },
                         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -81,16 +91,65 @@ const eventDetailSlice = createSlice( {
                 //console.log( "Updating state" );
                 state.currentEvent = event;
             }
+        },
+        updateEvent: ( state, action ) => {
+            //console.log( "updateEvent reducer" );
+
+            let modifiedEvent = {};
+            modifiedEvent.id = action.payload.id;
+            modifiedEvent.name = action.payload.name;
+            modifiedEvent.eventDate = action.payload.eventDate;
+
+            let newState = state.currentEvent;
+
+            //console.log( newState );
+
+            newState.id = modifiedEvent.id;
+            newState.name = modifiedEvent.name;
+            newState.eventDate = modifiedEvent.eventDate;
+
+            //console.log( "Modified new state = " + newState );
+
+            state.currentEvent = newState;
+        },
+        updateQuestionApproved: ( state, action ) => {
+            //console.log( "Approve Question" );
+            //console.log( action.payload );
+
+            const { eventId, questionId, approvedVal } = action.payload;
+
+            const event = state.currentEvent;
+
+            if ( event.id === eventId ) {
+                //console.log( "Event id matches" );
+
+                const question = event.questions.find( q => q.qid === questionId );
+
+                //console.log( "Approving question for question " + JSON.stringify( question ) );
+
+                // /event/:id/question/:qid/approved
+
+                question.approved = approvedVal;
+
+                //console.log( "Question approved" );
+
+                // update the state
+                //console.log( "Updating state" );
+                state.currentEvent = event;
+            }
+        },
+        deleteQuestion: ( state, action ) => {
         }
     }
 } );
 
 const fetchEventDetail = ( dispatch, getState, id ) => {
+    //console.log( "Fetching event detail for event " + id );
     // Make an async HTTP request
-    return fetch( `/event/${ id }`, {
+    return fetch( `http://127.0.0.1:3500/event/${ id }`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
     } ).then( res => { const evts = res.json(); return evts; } )
         .then( evts => {
             dispatch( { type: "currentEvent/loadEventDetail", payload: evts } );
@@ -99,8 +158,8 @@ const fetchEventDetail = ( dispatch, getState, id ) => {
 }
 
 const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
-    console.log( "Making Adjustment: " + adjustment );
-    return fetch( `/event/${ eventId }/question/${ questionId }/ranking`, {
+    //console.log( "Making Adjustment: " + adjustment );
+    return fetch( `http://127.0.0.1:3500/event/${ eventId }/question/${ questionId }/ranking`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify( { "adjustment": adjustment } ),
@@ -120,9 +179,99 @@ const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
     );
 }
 
-export const { loadEventDetail, addQuestion, adjustQuestionRanking } = eventDetailSlice.actions;
+const modifyEvent = ( updatedEvent, dispatch ) => {
+    return fetch( `http://
+${ proxyHost }:${ proxyPort }/event`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        body: JSON.stringify( updatedEvent )
+    } )
+        .then( response => {
+            if ( response.ok ) {
 
-export { fetchEventDetail, processAdjustment };
+                console.log( "Event updated, dispatching updateEvent action" );
+
+                dispatch( { type: "currentEvent/updateEvent", payload: { "id": updatedEvent.eventId, "name": updatedEvent.eventName, "eventDate": updatedEvent.eventDate } } );
+
+            } else {
+                //console.log( response );
+                console.log( "Event not updated" );
+                return null;
+            }
+        } )
+        .catch( error => {
+            console.log( error );
+            return null;
+        } );
+}
+
+function processAddQuestion( event, dispatch ) {
+    //console.log( "Add Question" );
+    //console.log( event );
+
+    if ( event !== null && event !== undefined ) {
+
+        if ( event.keyCode === 13 || event.which === 13 ) {
+
+            let newQuestion = event.target.value;
+
+            // todo: add question to the event
+            // set the ranking to 0
+            // add the question to the state
+            // clear the input field
+            event.target.value = "Enter question";
+
+            //console.log( "Adding question: " + newQuestion );
+            //debugger
+            dispatch( { type: "currentEvent/addQuestion", payload: newQuestion } );
+        }
+    }
+}
+
+
+function stringToDate( dateString ) {
+    //console.log( "stringToDate() dateString: " + dateString );
+    if ( dateString === null || dateString === undefined ) {
+        return new Date();
+    }
+
+    var parts = dateString.split( '-' )
+    let dt = new Date();
+    dt.setFullYear( parts[ 0 ] );
+    dt.setMonth( parts[ 1 ] - 1 );
+    dt.setDate( parts[ 2 ] );
+    //console.log( dt );
+    return dt;
+}
+
+function processQuestionApproval( eventId, questionId, approvedVal, dispatch ) {
+    // Write a function that has `dispatch` and `getState` as arguments
+    // Make an async HTTP request
+    //console.log( "processQuestionApproval" );
+    //console.log( eventId );
+    //console.log( questionId );
+    //console.log( approvedVal );
+
+    return fetch( `http://127.0.0.1:3500/event/${ eventId }/question/${ questionId }/approved`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        body: JSON.stringify( { "approved": approvedVal } )
+    } ).then( res => {
+        //console.log( res );
+        const evts = res.json();
+        //console.log( evts );
+        return evts;
+    } ).then( evts => {
+        dispatch( { type: "currentEvent/updateQuestionApproved", payload: { "eventId": eventId, "questionId": questionId, "approvedVal": approvedVal } } );
+    } ).catch( err => console.log( err ) );
+    // todo, error condition
+}
+
+export const { loadEventDetail, addQuestion, adjustQuestionRanking, updateEvent } = eventDetailSlice.actions;
+
+export { fetchEventDetail, processAdjustment, modifyEvent, stringToDate, processAddQuestion, processQuestionApproval };
 
 export default eventDetailSlice.reducer;
 

@@ -9,6 +9,7 @@ import { processAdjustment } from './eventDetailSlice';
 import { Breadcrumb } from 'react-bootstrap';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import '../../app/App.css';
+import { processAddQuestion } from './eventDetailSlice';
 
 const selectEventDetail = state => state.currentEvent;
 
@@ -59,32 +60,33 @@ function EventDetail() {
                                             <tbody>
                                                 { ( eventDetailState.currentEvent.questions !== null && eventDetailState.currentEvent.questions !== undefined ) ? [ ...eventDetailState.currentEvent.questions ].sort( ( a, b ) =>
                                                     b.ranking - a.ranking
-                                                ).map( qVal => (
-                                                    < tr key={ qVal.qid } >
-                                                        <td>{ qVal.question }</td>
-                                                        <td>{ qVal.ranking }</td>
-                                                        <td colSpan="5">
-                                                            <ButtonGroup className="like-buttons">
-                                                                { radios.map( ( radio, idx ) => (
-                                                                    <ToggleButton
-                                                                        key={ qVal.qid + "-" + idx }
-                                                                        id={ `radio-${ qVal.qid }-${ idx }` }
-                                                                        type="radio"
-                                                                        variant="primary"
-                                                                        name={ `radio-${ qVal.qid }` }
-                                                                        value={ radio.value }
-                                                                        disabled={ setButtonGroupState( eventDetailState.currentEvent.id, qVal.qid, idx ) }
-                                                                        onChange={ ( e ) => processButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
-                                                                        }
-                                                                    >
-                                                                        { radio.name }
-                                                                    </ToggleButton>
-                                                                ) ) }
-                                                            </ButtonGroup>
+                                                ).filter( // filter approved questions
+                                                    qVal => ( qVal.approved === true ) ).map( qVal => (
+                                                        < tr key={ qVal.qid } >
+                                                            <td>{ qVal.question }</td>
+                                                            <td>{ qVal.ranking }</td>
+                                                            <td colSpan="5">
+                                                                <ButtonGroup className="like-buttons">
+                                                                    { radios.map( ( radio, idx ) => (
+                                                                        <ToggleButton
+                                                                            key={ qVal.qid + "-" + idx }
+                                                                            id={ `radio-${ qVal.qid }-${ idx }` }
+                                                                            type="radio"
+                                                                            variant="primary"
+                                                                            name={ `radio-${ qVal.qid }` }
+                                                                            value={ radio.value }
+                                                                            disabled={ setButtonGroupState( eventDetailState.currentEvent.id, qVal.qid, idx ) }
+                                                                            onChange={ ( e ) => processButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
+                                                                            }
+                                                                        >
+                                                                            { radio.name }
+                                                                        </ToggleButton>
+                                                                    ) ) }
+                                                                </ButtonGroup>
 
-                                                        </td>
-                                                    </tr>
-                                                ) ) : <tr><td colSpan="7"><p>No Questions Found</p></td></tr> }
+                                                            </td>
+                                                        </tr>
+                                                    ) ) : <tr><td colSpan="7"><p>No Questions Found</p></td></tr> }
                                             </tbody>
                                         </table>
 
@@ -101,27 +103,6 @@ function EventDetail() {
 
             </Container >
         </> );
-}
-
-function processAddQuestion( event, dispatch ) {
-    //console.log( "Add Question" );
-    //console.log( event );
-
-    if ( event !== null && event !== undefined ) {
-
-        if ( event.keyCode === 13 || event.which === 13 ) {
-
-            let newQuestion = event.target.value;
-
-            // todo: add question to the event
-            // set the ranking to 0
-            // add the question to the state
-            // clear the input field
-            event.target.value = "Enter question";
-
-            dispatch( { type: "currentEvent/addQuestion", payload: newQuestion } );
-        }
-    }
 }
 
 function processButtonChange( uiEvt, eventId, questionId, dispatch ) {

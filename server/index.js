@@ -1,6 +1,7 @@
 const express = require( 'express' );
 const path = require( 'path' );
 const uuid = require( 'uuid' );
+const cors = require( 'cors' )
 
 const hostname = '127.0.0.1';
 const port = 3500;
@@ -10,6 +11,8 @@ server.set( 'etag', false );
 server.listen( port, hostname, () => {
     console.log( `Server running at http://${ hostname }:${ port }/` );
 } );
+
+server.use( cors() );
 
 server.use( express.static( path.resolve( __dirname, 'public' ) ) );
 server.use( express.json() );
@@ -132,6 +135,20 @@ server.post( '/event/:id/question', function ( req, res ) {
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
     Promise.all( [ controllerFactory.getEventController().addQuestion( req.params.id, req.body ) ] ).then( ( results ) => {
+        //console.log( results );
+        res.set( 'Cache-Control', 'no-store' );
+        res.status( 200 ).send( results );
+    } ).catch( ( error ) => {
+        console.log( error );
+        res.send( {} );
+    } );
+} );
+
+server.put( '/event/:id/question/:qid/approved', function ( req, res ) {
+    // update the question
+    //console.log( "Updating Event By Id: " + req.params.id )
+    //console.log( req.body );
+    Promise.all( [ controllerFactory.getEventController().updateQuestionApproval( req.params.id, req.params.qid, req.body.approved ) ] ).then( ( results ) => {
         //console.log( results );
         res.set( 'Cache-Control', 'no-store' );
         res.status( 200 ).send( results );

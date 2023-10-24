@@ -31,6 +31,10 @@ module.exports = class EventController {
         return this.eventDB.addQuestion( eventId, question );
     }
 
+    updateQuestion( eventId, question ) {
+        return this.eventDB.updateQuestion( eventId, question );
+    }
+
     createEvent( event ) {
         return this.eventDB.createEvent( event );
     }
@@ -43,5 +47,7 @@ module.exports = class EventController {
         return this.eventDB.deleteEvent( eventId );
     }
 
-
+    updateQuestionApproval( evtId, question, approvedVal ) {
+        return this.eventDB.updateQuestionApproval( evtId, question, approvedVal );
+    }
 }
