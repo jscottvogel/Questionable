@@ -2,6 +2,8 @@ const express = require( 'express' );
 const path = require( 'path' );
 const uuid = require( 'uuid' );
 const cors = require( 'cors' )
+const _dirname = path.dirname( "" );
+const buildPath = path.join( _dirname, "../questionable-client/build" );
 
 const hostname = '127.0.0.1';
 const port = 3500;
@@ -14,7 +16,8 @@ server.listen( port, hostname, () => {
 
 server.use( cors() );
 
-server.use( express.static( path.resolve( __dirname, 'public' ) ) );
+server.use( express.static( buildPath ) );
+
 server.use( express.json() );
 server.use( express.urlencoded() );
 
@@ -22,39 +25,17 @@ const controllerFactory = require( './controllers/ControllerFactory' );
 const { request } = require( 'http' );
 require( './controllers/EventControllers/EventController' );
 
-//app.route( '/*' )
-//    .get( function ( req, res ) {
-//        res.sendFile( path.resolve( app.get( 'appPath' ) + '/index.html' ) );
-//    } );
+server.get( '/*' ),
+    function ( req, res ) {
+        res.sendFile( path.join( _dirname, "../questionable-client/build/index.html" ), function ( err ) {
 
-server.get( "/add_question.html", ( req, res ) => {
-    res.sendFile( 'public/html/add_question.html', { root: __dirname } );
-} );
+            if ( err ) {
+                res.status( 500 ).send( err );
+            }
+        }
+        );
+    };
 
-server.get( "/view_eventdetail.html", ( req, res ) => {
-    res.sendFile( 'public/html/view_eventdetail.html', { root: __dirname } );
-} );
-
-server.get( '/', function ( req, res ) {
-    //res.sendFile( path.resolve( __dirname, 'pages/index.html' ) );
-    res.sendFile( 'public/html/view_eventhistory.html', { root: __dirname } );
-} );
-
-server.get( "/admin", ( req, res ) => {
-    res.sendFile( 'public/html/admin_dashboard.html', { root: __dirname } );
-} );
-
-server.get( "/admin/add", ( req, res ) => {
-    res.sendFile( 'public/html/admin_add_event.html', { root: __dirname } );
-} );
-
-server.get( "/admin/update", ( req, res ) => {
-    res.sendFile( 'public/html/admin_update_event.html', { root: __dirname } );
-} );
-
-server.get( "/admin/moderate", ( req, res ) => {
-    res.sendFile( 'public/html/admin_moderate_event.html', { root: __dirname } );
-} );
 
 server.get( '/events', function ( req, res ) {
     // this will return all events 
