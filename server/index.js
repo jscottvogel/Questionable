@@ -6,7 +6,7 @@ const _dirname = path.dirname( "" );
 const buildPath = path.join( _dirname, "../questionable-client/build" );
 
 const hostname = '52.23.215.125';
-const port = 3500;
+const port = 5001;
 
 const server = express();
 server.set( 'etag', false );
