@@ -5,7 +5,7 @@ const cors = require( 'cors' )
 const _dirname = path.dirname( "" );
 const buildPath = path.join( _dirname, "../questionable-client/build" );
 
-const hostname = '127.0.0.1';
+const hostname = '52.23.215.125';
 const port = 3500;
 
 const server = express();
