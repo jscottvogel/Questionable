@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { proxyHost, proxyPort } from '../../app/ProxyConfig';
+import { proxyUrl } from '../../app/ProxyConfig';
 
 const initialState = [];
 
