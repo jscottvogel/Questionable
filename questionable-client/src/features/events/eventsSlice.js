@@ -1,10 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const proxyHost = '127.0.0.1';
-const proxyPort = 3500;
-
-// Proxy URL
-const proxyUrl = `http://${ proxyHost }:${ proxyPort }`;
+import { proxyHost, proxyPort } from '../../app/ProxyConfig';
 
 const initialState = [];
 
@@ -44,7 +39,7 @@ const eventsSlice = createSlice( {
 // Write a function that has `dispatch` and `getState` as arguments
 const fetchEvents = ( dispatch, getState ) => {
     // Make an async HTTP request
-    return fetch( 'http://127.0.0.1:3500/events', {
+    return fetch( `${ proxyUrl }/events`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
@@ -62,7 +57,7 @@ const fetchEvents = ( dispatch, getState ) => {
 
 function removeEvent( id, dispatch ) {
     //console.log( "deleteEvent: " + id );
-    return fetch( `http://127.0.0.1:3500/event/${ id }`, {
+    return fetch( `${ proxyUrl }/event/${ id }`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
@@ -81,8 +76,7 @@ function removeEvent( id, dispatch ) {
 }
 
 function addNewEvent( newEvent, dispatch ) {
-    return fetch( `http://
-${ proxyHost }:${ proxyPort }/event`, {
+    return fetch( `${ proxyUrl }/event`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
