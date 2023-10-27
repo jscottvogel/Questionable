@@ -1,2 +1,2 @@
-export const proxyUrl = `http://question-response.com`;
+export const proxyUrl = `https://question-response.com`;
 
