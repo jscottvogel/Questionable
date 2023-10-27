@@ -40,7 +40,7 @@ const eventsSlice = createSlice( {
 const fetchEvents = ( dispatch, getState ) => {
     // Make an async HTTP request
     //console.log( `${ proxyUrl }/events` );
-    return fetch( `${ proxyUrl }/events`, {
+    return fetch( `${ proxyUrl }/api/events`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
@@ -58,7 +58,7 @@ const fetchEvents = ( dispatch, getState ) => {
 
 function removeEvent( id, dispatch ) {
     //console.log( "deleteEvent: " + id );
-    return fetch( `${ proxyUrl }/event/${ id }`, {
+    return fetch( `${ proxyUrl }/api/event/${ id }`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
@@ -77,7 +77,7 @@ function removeEvent( id, dispatch ) {
 }
 
 function addNewEvent( newEvent, dispatch ) {
-    return fetch( `${ proxyUrl }/event`, {
+    return fetch( `${ proxyUrl }/api/event`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached

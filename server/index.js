@@ -5,7 +5,7 @@ const cors = require( 'cors' )
 const _dirname = path.dirname( "" );
 const buildPath = path.join( _dirname, "../questionable-client/build" );
 
-const hostname = '52.23.215.125';
+const hostname = '172.31.38.99';
 const port = 5001;
 
 const server = express();
@@ -37,7 +37,7 @@ server.get( '/*' ),
     };
 
 
-server.get( '/events', function ( req, res ) {
+server.get( '/api/events', function ( req, res ) {
     // this will return all events 
     // TODO - add code to return only events for the signed in user
     // TODO - add code to paginate the results
@@ -51,7 +51,7 @@ server.get( '/events', function ( req, res ) {
     } );
 } );
 
-server.patch( '/like', function ( req, res ) {
+server.patch( '/api/like', function ( req, res ) {
     // search for questions associated with the event
     // fetch the question
     Promise.all( [ controllerFactory.getEventController().likeQuestion( req.body.eId, req.body.qId ) ] ).then( ( results ) => {
@@ -67,7 +67,7 @@ server.patch( '/like', function ( req, res ) {
     } );
 } );
 
-server.patch( '/dislike', function ( req, res ) {
+server.patch( '/api/dislike', function ( req, res ) {
     // search for questions associated with the event
     // fetch the question
 
@@ -81,7 +81,7 @@ server.patch( '/dislike', function ( req, res ) {
     } );
 } );
 
-server.patch( '/event/:id/question/:qid/ranking', function ( req, res ) {
+server.patch( '/api/event/:id/question/:qid/ranking', function ( req, res ) {
     // search for questions associated with the event
     // fetch the question
     Promise.all( [ controllerFactory.getEventController().adjustQuestionRanking( req.params.id, req.params.qid, req.body.adjustment ) ] ).then( ( results ) => {
@@ -97,7 +97,7 @@ server.patch( '/event/:id/question/:qid/ranking', function ( req, res ) {
     } );
 } );
 
-server.get( '/event/:id', function ( req, res ) {
+server.get( '/api/event/:id', function ( req, res ) {
     // search for questions associated with the event
     // fetch the event
     //console.log( "Finding Event By Id: " + req.params.id );
@@ -111,7 +111,7 @@ server.get( '/event/:id', function ( req, res ) {
     } );
 } );
 
-server.post( '/event/:id/question', function ( req, res ) {
+server.post( '/api/event/:id/question', function ( req, res ) {
     // save or update the event
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
@@ -125,7 +125,7 @@ server.post( '/event/:id/question', function ( req, res ) {
     } );
 } );
 
-server.put( '/event/:id/question/:qid/approved', function ( req, res ) {
+server.put( '/api/event/:id/question/:qid/approved', function ( req, res ) {
     // update the question
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
@@ -139,7 +139,7 @@ server.put( '/event/:id/question/:qid/approved', function ( req, res ) {
     } );
 } );
 
-server.put( '/event', function ( req, res ) {
+server.put( '/api/event', function ( req, res ) {
     // save or update the event
     //console.log( "Updating Event By Id: " + req.params.id )
     //console.log( req.body );
@@ -153,7 +153,7 @@ server.put( '/event', function ( req, res ) {
     } );
 } );
 
-server.post( '/event', function ( req, res ) {
+server.post( '/api/event', function ( req, res ) {
     // save or update the event
     //console.log( req.body );
     Promise.all( [ controllerFactory.getEventController().createEvent( req.body ) ] ).then( ( results ) => {
@@ -166,7 +166,7 @@ server.post( '/event', function ( req, res ) {
     } );
 } );
 
-server.delete( '/event/:id', function ( req, res ) {
+server.delete( '/api/event/:id', function ( req, res ) {
     // save or update the event
     //console.log( req.body );
     Promise.all( [ controllerFactory.getEventController().deleteEvent( req.params.id ) ] ).then( ( results ) => {

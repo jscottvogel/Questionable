@@ -29,7 +29,7 @@ const eventDetailSlice = createSlice( {
             //console.log( "Adding question to event" );
 
             //debugger
-            fetch( `${ proxyUrl }/event/${ state.currentEvent.id }/question`, {
+            fetch( `${ proxyUrl }/api/event/${ state.currentEvent.id }/question`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify( { "qid": null, "question": action.payload, "ranking": 0, "approved": false } ),
@@ -37,7 +37,7 @@ const eventDetailSlice = createSlice( {
             } ).then( response => response.json() )
                 .then( ( temp ) => {
                     //debugger
-                    return fetch( `${ proxyUrl }/event/${ state.currentEvent.id }`, {
+                    return fetch( `${ proxyUrl }/api/event/${ state.currentEvent.id }`, {
                         method: "GET",
                         headers: { "Content-Type": "application/json" },
                         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -141,7 +141,7 @@ const eventDetailSlice = createSlice( {
 const fetchEventDetail = ( dispatch, getState, id ) => {
     //console.log( "Fetching event detail for event " + id );
     // Make an async HTTP request
-    return fetch( `${ proxyUrl }/event/${ id }`, {
+    return fetch( `${ proxyUrl }/api/event/${ id }`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
@@ -154,7 +154,7 @@ const fetchEventDetail = ( dispatch, getState, id ) => {
 
 const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
     //console.log( "Making Adjustment: " + adjustment );
-    return fetch( `${ proxyUrl }/event/${ eventId }/question/${ questionId }/ranking`, {
+    return fetch( `${ proxyUrl }/api/event/${ eventId }/question/${ questionId }/ranking`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify( { "adjustment": adjustment } ),
@@ -175,7 +175,7 @@ const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
 }
 
 const modifyEvent = ( updatedEvent, dispatch ) => {
-    return fetch( `${ proxyUrl }/event`, {
+    return fetch( `${ proxyUrl }/api/event`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -247,7 +247,7 @@ function processQuestionApproval( eventId, questionId, approvedVal, dispatch ) {
     //console.log( questionId );
     //console.log( approvedVal );
 
-    return fetch( `${ proxyUrl }/event/${ eventId }/question/${ questionId }/approved`, {
+    return fetch( `${ proxyUrl }/api/event/${ eventId }/question/${ questionId }/approved`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
