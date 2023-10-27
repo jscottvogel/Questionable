@@ -39,6 +39,7 @@ const eventsSlice = createSlice( {
 // Write a function that has `dispatch` and `getState` as arguments
 const fetchEvents = ( dispatch, getState ) => {
     // Make an async HTTP request
+    //console.log( `${ proxyUrl }/events` );
     return fetch( `${ proxyUrl }/events`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
