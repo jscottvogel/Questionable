@@ -32,6 +32,9 @@ const eventsSlice = createSlice( {
         deleteEvent: ( state, action ) => {
             const eventId = action.payload;
             state.events = state.events.filter( event => event.id !== eventId );
+        },
+        reset: ( state, action ) => {
+            state.events = initialState;
         }
     }
 } );

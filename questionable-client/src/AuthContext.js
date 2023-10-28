@@ -8,30 +8,33 @@ function AuthProvider( { children } ) {
     const [ session, setSession ] = useState( null );
     const [ isLoading, setIsLoading ] = useState( true );
 
-    const getCurrentUser = async () => {
-        try {
-            const user = await auth.getCurrentUser();
+    const getCurrentUser = () => {
+        auth.getCurrentUser().then( ( user ) => {
             setUser( user );
-            const session = await auth.getSession();
-            setSession( session );
-        } catch ( err ) {
-            // not logged in
-            console.log( err );
+            setIsLoading( false );
+
+            auth.getSession().then( ( session ) => {
+                setSession( session );
+            } ).catch( ( err ) => {
+                setUser( null );
+                setIsLoading( false );
+            } );
+        } ).catch( ( err ) => {
             setUser( null );
-            setSession( null );
+            setIsLoading( false );
         }
+        );
     }
 
     useEffect( () => {
-        getCurrentUser()
-            .then( () => setIsLoading( false ) )
-            .catch( () => setIsLoading( false ) )
+        getCurrentUser();
     }, [] )
 
     const signIn = async ( username, password ) => {
         await auth.signIn( username, password )
         await getCurrentUser();
     }
+
     const signOut = async () => {
         await auth.signOut();
         setUser( null );

@@ -184,9 +184,10 @@ const modifyEvent = ( updatedEvent, dispatch ) => {
         .then( response => {
             if ( response.ok ) {
 
-                console.log( "Event updated, dispatching updateEvent action" );
-
+                //console.log( "Event updated, dispatching updateEvent action" );
                 dispatch( { type: "currentEvent/updateEvent", payload: { "id": updatedEvent.eventId, "name": updatedEvent.eventName, "eventDate": updatedEvent.eventDate } } );
+
+                dispatch( { type: "events/reset", payload: {} } );
 
             } else {
                 //console.log( response );

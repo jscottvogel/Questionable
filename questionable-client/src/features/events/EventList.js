@@ -21,7 +21,6 @@ function EventList() {
 
     return (
         <>
-
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Upcoming Events</h2>
                 <Row className="mb-3">

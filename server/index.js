@@ -4,9 +4,10 @@ const uuid = require( 'uuid' );
 const cors = require( 'cors' )
 const _dirname = path.dirname( "" );
 const buildPath = path.join( _dirname, "../questionable-client/build" );
+require( 'dotenv' ).config( { path: './questionable.env' } );
 
-const hostname = '172.31.38.99';
-const port = 5001;
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
 
 const server = express();
 server.set( 'etag', false );

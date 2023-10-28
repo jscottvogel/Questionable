@@ -40,7 +40,7 @@ function AdminUpdateEventDetail() {
 
         modifyEvent( updatedEvent, dispatch );
 
-        navigate( '/admin' );
+        navigate( `/admin` );
     }
 
     return (

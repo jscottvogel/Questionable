@@ -1,11 +1,16 @@
 import { useContext } from "react"
 import { AuthContext } from "../AuthContext"
+import { Breadcrumb } from "react-bootstrap"
 
 export default function UserProfile() {
     const { user, signOut } = useContext( AuthContext )
 
     return (
         <div>
+            <Breadcrumb>
+                <Breadcrumb.Item href="/admin">Admin Dashboard</Breadcrumb.Item>
+                <Breadcrumb.Item active>User Profile</Breadcrumb.Item>
+            </Breadcrumb>
             { user && (
                 <div>
                     <h2>User Profile</h2>

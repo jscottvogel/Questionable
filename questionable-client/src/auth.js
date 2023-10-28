@@ -34,8 +34,9 @@ export function signIn( username, password ) {
 }
 
 export function getSession() {
-    const cognitoUser = userPool.getCurrentUser()
     return new Promise( ( resolve, reject ) => {
+        const cognitoUser = userPool.getCurrentUser()
+
         if ( !cognitoUser ) {
             reject( new Error( "No user found" ) )
             return
@@ -83,10 +84,18 @@ export async function getCurrentUser() {
 }
 
 export function signOut() {
-    const cognitoUser = userPool.getCurrentUser()
-    if ( cognitoUser ) {
-        cognitoUser.signOut()
-    }
+    return new Promise( ( resolve, reject ) => {
+        try {
+            const cognitoUser = userPool.getCurrentUser()
+            if ( cognitoUser ) {
+                cognitoUser.signOut()
+            }
+
+            resolve( true );
+        } catch ( err ) {
+            reject( err );
+        }
+    } )
 }
 
 export function confirmSignUp( username, code ) {

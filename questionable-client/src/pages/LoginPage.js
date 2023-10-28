@@ -16,21 +16,22 @@ export default function LoginPage() {
     const { user, signIn } = useContext( AuthContext )
 
 
-    const handleSubmit = async ( e ) => {
+    const handleSubmit = ( e ) => {
         e.preventDefault()
         setError( "" )
 
         try {
-            await signIn( username, password )
+            signIn( username, password )
             // Redirect to the app's main page or dashboard
+
+            // If the user is logged in, don't show the login form
+            if ( user ) {
+                // Redirect to the admin dashboard page
+                return navigate( "/admin" );
+            }
+
         } catch ( err ) {
             setError( err.message )
-        }
-
-        // If the user is logged in, don't show the login form
-        if ( user ) {
-            // Redirect to the admin dashboard page
-            return navigate( "/admin" );
         }
 
     }
@@ -55,6 +56,8 @@ export default function LoginPage() {
             </form>
             { error && <p>{ error }</p> }
 
+            <Link to="/signUp">Create Account</Link>
+            <br />
             <Link to="/forgot-password">Forgot Password</Link>
 
         </div>

@@ -22,7 +22,6 @@ import AdminRouteGuard from '../pages/AdminRouteGuard';
 import LogoutPage from '../pages/LogoutPage';
 import AdminAddEvent from '../components/admin/AdminAddEvent';
 
-
 function App() {
 
   return (
