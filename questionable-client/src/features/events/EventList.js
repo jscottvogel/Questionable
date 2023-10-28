@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { fetchEvents } from './eventsSlice';
 import { useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
+
 
 const selectEvents = state => state.events
 
@@ -26,27 +28,32 @@ function EventList() {
                 <Row className="mb-3">
                     <Col className="mb-3">
                         { eventState.events.filter( event => event.isActive === true ).map( event => (
-                            <Card border="secondary"
+                            <Card
                                 bg={ 'light' }
                                 key={ event.id }>
+
+                                <Card.Header as="h4">{ event.name }</Card.Header>
+                                <Card.Body >
+                                    <Table borderless>
+                                        <tbody>
+                                            <tr>
+                                                <td><b>Event Date:</b>&nbsp;&nbsp;&nbsp;{ event.eventDate }</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Description:</b>&nbsp;&nbsp;&nbsp;{ event.description }</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Card.Body>
                                 <Card.Body>
-                                    <Card.Title >{ event.name }</Card.Title>
-                                    <Card.Body >
-                                        { event.description }
-                                        <br></br>
-                                        { event.eventDate }
-                                        <br></br>
-                                    </Card.Body>
-                                    {
-                                        <Button onClick={ () => { navigate( `/event/${ event.id }` ) } }>View Details</Button>
-                                    }
+                                    <Button onClick={ () => { navigate( `/event/${ event.id }` ) } }>View Details</Button>
                                 </Card.Body>
                             </Card>
                         ) ) }
                     </Col>
                 </Row>
 
-            </Container>
+            </Container >
 
 
 

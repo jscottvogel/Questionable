@@ -46,18 +46,3 @@
     transform: rotate(360deg);
   }
 }
-
-.like-buttons
-{
-  margin-bottom: .5rem !important;
-  border-radius: 50% !important;
-  width: 3rem !important;
-  height: 3rem !important;
-  padding: 5 !important;
-  font-size: 1.5rem !important;
-  line-height: 1.5rem !important;
-  text-align: center !important;
-  color: #fff !important;
-  background-color: #007bff !important;
-  border: 10 !important;
-}
