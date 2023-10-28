@@ -40,7 +40,7 @@ function EventDetail() {
                 <h2 className="md-auto text-center p-4">Event Detail</h2>
                 <Row className="mb-3">
                     <Col className="mb-3">
-                        < Card border="secondary"
+                        < Card
                             bg={ 'light' }
                             key={ eventDetailState.currentEvent.id } >
                             <Card.Body>
