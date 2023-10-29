@@ -10,6 +10,7 @@ import '../../app/App.css';
 import { processAddQuestion } from '../../features/events/eventDetailSlice';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { processQuestionApproval } from '../../features/events/eventDetailSlice';
+import { Table } from 'react-bootstrap';
 
 
 const selectEventDetail = state => state.currentEvent;
@@ -43,58 +44,65 @@ function AdminManageEventQuestions() {
                         < Card border="secondary"
                             bg={ 'light' }
                             key={ eventDetailState.currentEvent.id } >
-                            <Card.Body>
-                                <Card.Title >{ eventDetailState.currentEvent.name }</Card.Title>
-                                <p>Event Date: { eventDetailState.currentEvent.eventDate }</p>
-                                <Form className="ManageEventQuestionsForm" id="ManageEventQuestionsForm">
-                                    <Form.Group className="mb-3" controlId="formManageEventQuestions" onKeyDown={ ( evt ) => processAddQuestion( evt, dispatch ) } >
-                                        <table className="manage-question-table" id="manage-question-table">
-                                            <thead>
-                                                <tr>
-                                                    <th align="center">Question</th>
-                                                    <th align="center">Ranking</th>
-                                                    <th align="center"></th>
-                                                    <th colSpan="4" align="center">Rating</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                { ( eventDetailState.currentEvent.questions !== null && eventDetailState.currentEvent.questions !== undefined ) ? [ ...eventDetailState.currentEvent.questions ].sort( ( a, b ) =>
-                                                    b.ranking - a.ranking
-                                                ).map( qVal => (
-                                                    < tr key={ qVal.qid } >
-                                                        <td>{ qVal.question }</td>
-                                                        <td>{ qVal.ranking }</td>
-                                                        <td colSpan="5">
-                                                            <ButtonGroup className="action-buttons">
-                                                                { radios.map( ( radio, idx ) => (
-                                                                    <ToggleButton
-                                                                        key={ qVal.qid + "-" + idx }
-                                                                        id={ `radio-${ qVal.qid }-${ idx }` }
-                                                                        type="radio"
-                                                                        variant="primary"
-                                                                        name={ `radio-${ qVal.qid }` }
-                                                                        value={ radio.value }
-                                                                        disabled={ setQuestionManagementButtonGroupState( qVal, idx ) }
-                                                                        onChange={ ( e ) => processQuestionManagementButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
-                                                                        }
-                                                                    >
-                                                                        { radio.name }
-                                                                    </ToggleButton>
-                                                                ) ) }
-                                                            </ButtonGroup>
-                                                        </td>
-                                                    </tr>
-                                                ) ) : <tr><td colSpan="7"><p>No Questions Found</p></td></tr> }
-                                            </tbody>
-                                        </table>
-
-                                        <div>
-                                            <Form.Label>Question</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter question" />
-                                        </div>
+                            <Card.Header as="h4">{ eventDetailState.currentEvent.name }</Card.Header>
+                            <Card.Body >
+                                <Table borderless>
+                                    <tbody>
+                                        <tr><td><b>Event Date:</b>&nbsp;&nbsp;&nbsp; { eventDetailState.currentEvent.eventDate }</td></tr>
+                                        <tr>
+                                            <td><b>Description:</b>&nbsp;&nbsp;&nbsp;{ eventDetailState.currentEvent.description }</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                                <Table>
+                                    <thead>
+                                        <tr>
+                                            <th >Question</th>
+                                            <th >Ranking</th>
+                                            <th >Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        { ( eventDetailState.currentEvent.questions !== null && eventDetailState.currentEvent.questions !== undefined ) ? [ ...eventDetailState.currentEvent.questions ].sort( ( a, b ) =>
+                                            b.ranking - a.ranking
+                                        ).map( qVal => (
+                                            < tr key={ qVal.qid } >
+                                                <td>{ qVal.question }</td>
+                                                <td>{ qVal.ranking }</td>
+                                                <td>
+                                                    <Form className="ManageEventQuestionsForm" id="ManageEventQuestionsForm">
+                                                        <ButtonGroup className="action-buttons">
+                                                            { radios.map( ( radio, idx ) => (
+                                                                <ToggleButton
+                                                                    key={ qVal.qid + "-" + idx }
+                                                                    id={ `radio-${ qVal.qid }-${ idx }` }
+                                                                    type="radio"
+                                                                    variant="primary"
+                                                                    name={ `radio-${ qVal.qid }` }
+                                                                    value={ radio.value }
+                                                                    disabled={ setQuestionManagementButtonGroupState( qVal, idx ) }
+                                                                    onChange={ ( e ) => processQuestionManagementButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
+                                                                    }
+                                                                >
+                                                                    { radio.name }
+                                                                </ToggleButton>
+                                                            ) ) }
+                                                        </ButtonGroup>
+                                                    </Form>
+                                                </td>
+                                            </tr>
+                                        ) ) : <tr><td><p>No Questions Found</p></td></tr> }
+                                    </tbody>
+                                </Table>
+                            </Card.Body>
+                            <Card.Footer>
+                                <Form className="ManageAddQuestionsForm" id="ManageAddQuestionsForm">
+                                    <Form.Group className="mb-3" controlId="formManageAddQuestions" onKeyDown={ ( evt ) => { processAddQuestion( evt, dispatch, null ); } } >
+                                        <Form.Label>Add a question:</Form.Label>
+                                        <Form.Control type="text" placeholder="Enter question" />
                                     </Form.Group>
                                 </Form>
-                            </Card.Body>
+                            </Card.Footer>
                         </Card>
                     </Col >
                 </Row >
@@ -133,6 +141,11 @@ function setQuestionManagementButtonGroupState( question, idx ) {
 }
 
 function processQuestionManagementButtonChange( uiEvt, eventId, questionId, dispatch ) {
+
+    //console.log( "processQuestionManagementButtonChange" );
+    //console.log( uiEvt.target.form );
+    //console.log( uiEvt.target.form[ `radio-${ questionId }-${ 0 }` ] );
+    //console.log( uiEvt.target.form[ `radio-${ questionId }-${ 1 }` ] );
 
     let approveButton = uiEvt.target.form[ `radio-${ questionId }-${ 0 }` ];
     let unapproveButton = uiEvt.target.form[ `radio-${ questionId }-${ 1 }` ];

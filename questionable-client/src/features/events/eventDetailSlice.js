@@ -221,7 +221,9 @@ function processAddQuestion( event, dispatch, setShow ) {
             //debugger
             dispatch( { type: "currentEvent/addQuestion", payload: newQuestion } );
 
-            setShow( true );
+            if ( setShow !== null && setShow !== undefined ) {
+                setShow( true );
+            }
         }
     }
 }

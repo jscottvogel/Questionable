@@ -17,8 +17,8 @@ import ConfirmSignUp from '../pages/ConfirmSignUp';
 import UserProfile from '../pages/UserProfile';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
-import RouteGuard from '../pages/RouteGuard';
-import AdminRouteGuard from '../pages/AdminRouteGuard';
+import RouteGuard from '../components/RouteGuard';
+import AdminRouteGuard from '../components/AdminRouteGuard';
 import LogoutPage from '../pages/LogoutPage';
 import AdminAddEvent from '../components/admin/AdminAddEvent';
 

@@ -22,6 +22,9 @@ function QuestionableMenu() {
 
                             {/* if user is logged in, show the following links */ }
                             { user && (
+                                <Nav.Link href="/admin">Admin Dashboard</Nav.Link>
+                            ) }
+                            { user && (
                                 <Nav.Link href="/profile">Profile</Nav.Link>
                             ) }
                             { user && (
