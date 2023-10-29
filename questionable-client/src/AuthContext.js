@@ -16,10 +16,12 @@ function AuthProvider( { children } ) {
             auth.getSession().then( ( session ) => {
                 setSession( session );
             } ).catch( ( err ) => {
+                //console.log( err );
                 setUser( null );
                 setIsLoading( false );
             } );
         } ).catch( ( err ) => {
+            //console.log( err );
             setUser( null );
             setIsLoading( false );
         }
@@ -30,15 +32,36 @@ function AuthProvider( { children } ) {
         getCurrentUser();
     }, [] )
 
-    const signIn = async ( username, password ) => {
-        await auth.signIn( username, password )
-        await getCurrentUser();
+    const signIn = ( username, password ) => {
+        auth.signIn( username, password ).then( ( user ) => {
+            setUser( user );
+            setIsLoading( false );
+
+            auth.getSession().then( ( session ) => {
+                setSession( session );
+            } ).catch( ( err ) => {
+                //console.log( err );
+                setUser( null );
+                setIsLoading( false );
+            } );
+        } ).catch( ( err ) => {
+            //console.log( err );
+            setUser( null );
+            setIsLoading( false );
+        } );
     }
 
-    const signOut = async () => {
-        await auth.signOut();
-        setUser( null );
-        setSession( null );
+    const signOut = () => {
+        auth.signOut().then( () => {
+            setUser( null );
+            setSession( null );
+            setIsLoading( false );
+        } ).catch( ( err ) => {
+            //console.log( err );
+            setUser( null );
+            setSession( null );
+            setIsLoading( false );
+        } );
     }
 
     const authValue = {
