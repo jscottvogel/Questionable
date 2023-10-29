@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { Container, Row, Col } from 'react-bootstrap';
 import { Form, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 
 export default function LoginPage() {
@@ -76,49 +77,44 @@ export default function LoginPage() {
                         <Col className="mb-3">
                         </Col>
                         <Col className="mb-3">
-                            <Form.Group className="mb-3" controlId="formLoginUsername" >
-                                <Form.Label>Username:</Form.Label>
-                                <Form.Control required maxLength="32" type="text" placeholder="Username" value={ username } onChange={ ( e ) => setUsername( e.target.value ) } />
-                                <Form.Control.Feedback type="invalid">
-                                    Please provide a username.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="formLoginPassword" >
-                                <Form.Label>Password:</Form.Label>
-                                <Form.Control required maxLength="32" type="password" placeholder="Password" value={ password } onChange={ ( e ) => setPassword( e.target.value ) } />
-                                <Form.Control.Feedback type="invalid">
-                                    Please provide a password.
-                                </Form.Control.Feedback>
-                            </Form.Group>
+                            < Card
+                                bg={ 'light' }>
+                                <Card.Header as="h4">Enter Credentials</Card.Header>
+                                <Card.Body >
+                                    <Form.Group className="mb-3" controlId="formLoginUsername" >
+                                        <Form.Label>Username:</Form.Label>
+                                        <Form.Control required maxLength="32" type="text" placeholder="Username" value={ username } onChange={ ( e ) => setUsername( e.target.value ) } />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a username.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formLoginPassword" >
+                                        <Form.Label>Password:</Form.Label>
+                                        <Form.Control required maxLength="32" type="password" placeholder="Password" value={ password } onChange={ ( e ) => setPassword( e.target.value ) } />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a password.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
 
-                            { error && <p style={ { color: "red" } }>{ error }</p> }
+                                    { error && <p style={ { color: "red" } }>{ error }</p> }
 
-                        </Col>
-                        <Col className="mb-3">
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col className="mb-3">
-                        </Col>
-                        <Col className="mb-3">
-                            <Row className="mb-3">
-                                <Col className="mb-3">
                                     <Button variant="primary" type="submit">
                                         Login
                                     </Button>
-                                </Col>
-                                <Col className="mb-3">
-                                    <Button variant="primary" type="reset">Cancel</Button>
-                                </Col>
-                            </Row>
-                            <Row className="mb-3">
-                                <Col className="mb-3">
-                                    <Link to="/signUp">Create Account</Link>
-                                </Col>
-                                <Col className="mb-3">
-                                    <Link to="/forgot-password">Forgot Password</Link>
-                                </Col>
-                            </Row>
+                                    &nbsp;&nbsp;
+                                    <Button variant="primary" type="reset">Reset</Button>
+
+                                </Card.Body>
+                                <Card.Footer className="text-muted">
+                                    <br />
+                                    <Row className="mb-3">
+                                        <Col className="mb-3">
+                                            <Link to="/signUp">Create Account</Link><br />
+                                            <Link to="/forgot-password">Forgot Password</Link>
+                                        </Col>
+                                    </Row>
+                                </Card.Footer>
+                            </Card>
                         </Col>
                         <Col className="mb-3">
                         </Col>

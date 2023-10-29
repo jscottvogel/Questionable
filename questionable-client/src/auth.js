@@ -116,21 +116,25 @@ export function confirmSignUp( username, code ) {
 }
 
 export function forgotPassword( username ) {
+    console.log( "Forgot password: ", username );
+
     return new Promise( ( resolve, reject ) => {
         const cognitoUser = new CognitoUser( {
             Username: username,
             Pool: userPool,
-        } )
+        } );
 
         cognitoUser.forgotPassword( {
-            onSuccess: () => {
-                resolve()
+            onSuccess: function ( result ) {
+                console.log( 'call result: ' + result );
+                resolve( result );
             },
-            onFailure: ( err ) => {
-                reject( err )
-            },
-        } )
-    } )
+            onFailure: function ( err ) {
+                reject( err );
+            }
+        } );
+
+    } );
 }
 
 export function confirmPassword( username, confirmationCode, newPassword ) {
