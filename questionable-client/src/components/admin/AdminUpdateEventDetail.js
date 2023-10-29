@@ -56,34 +56,26 @@ function AdminUpdateEventDetail() {
                         < Card border="secondary"
                             bg={ 'light' }
                             key={ eventDetailState.currentEvent.id } >
+                            <Card.Header as="h4">{ eventDetailState.currentEvent.name }</Card.Header>
                             <Card.Body>
-                                <Card.Title >{ eventDetailState.currentEvent.name }</Card.Title>
-                                <br></br>
                                 <Form className="UpdateEventDetailForm" id="UpdateEventDetailForm" onSubmit={ ( e ) => handleSubmit( e, eventDetailState.currentEvent.id, dispatch ) } >
                                     <Form.Group className="mb-3" controlId="formUpdateEventDetail">
                                         <Form.Label>Event Name</Form.Label>
                                         <Form.Control required name="UpdateEventName" type="text" placeholder="Enter event name" defaultValue={ eventDetailState.currentEvent.name } />
-                                        <Form.Text className="text-muted">
-                                            Enter the name of the event.
-                                        </Form.Text>
-                                        <br></br>
                                         <br></br>
                                         <Form.Label>Event Description</Form.Label>
                                         <Form.Control required name="UpdateEventDescription" type="text" placeholder="Enter event description" defaultValue={ eventDetailState.currentEvent.description } />
-                                        <Form.Text className="text-muted">
-                                            Enter the description of the event.
-                                        </Form.Text>
+                                        <br></br>
                                         <Form.Label>Event Date</Form.Label>
                                         <Form.Control required name="UpdateEventDate" type="date" placeholder="Enter event date" defaultValue={ stringToDate( eventDetailState.currentEvent.eventDate ).toISOString().substring( 0, 10 ) } />
-                                        <Form.Text className="text-muted">
-                                            Enter the date of the event.
-                                        </Form.Text>
                                     </Form.Group>
+                                    <br></br>
                                     <Button variant="primary" type="submit">
                                         Submit
                                     </Button>
-                                    <Button variant="secondary" type="cancel">
-                                        Cancel
+                                    &nbsp;
+                                    <Button variant="secondary" type="reset">
+                                        Reset
                                     </Button>
                                 </Form>
                             </Card.Body>

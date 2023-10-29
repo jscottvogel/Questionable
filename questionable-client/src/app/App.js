@@ -10,7 +10,7 @@ import LoginPage from '../pages/LoginPage';
 // import AddEvent from '../features/admin/AddEvent';
 import AdminUpdateEventDetail from '../components/admin/AdminUpdateEventDetail';
 import AdminManageEventQuestions from '../components/admin/AdminManageEventQuestions';
-import AdminDashboard from '../pages/AdminDashboard';
+import AdminDashboard from '../components/admin/AdminDashboard';
 import { AuthProvider } from '../AuthContext';
 import SignUp from '../pages/SignUp';
 import ConfirmSignUp from '../pages/ConfirmSignUp';
