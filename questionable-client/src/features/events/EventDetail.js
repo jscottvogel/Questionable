@@ -10,10 +10,15 @@ import { Breadcrumb } from 'react-bootstrap';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import '../../app/App.css';
 import { processAddQuestion } from './eventDetailSlice';
+import Table from 'react-bootstrap/Table';
+import { Button } from 'react-bootstrap';
+import { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
 
 const selectEventDetail = state => state.currentEvent;
 
 function EventDetail() {
+    const [ show, setShow ] = useState( false );
     const eventDetailState = useSelector( selectEventDetail );
 
     const dispatch = useDispatch();
@@ -25,9 +30,9 @@ function EventDetail() {
     }, [ dispatch, eventDetailState, id ] );
 
     const radios = [
-        { name: 'Like', value: '1' },
-        { name: 'Neutral', value: '0' },
-        { name: 'Dislike', value: '-1' },
+        { name: '+1', value: '1' },
+        { name: '0', value: '0' },
+        { name: '-1', value: '-1' },
     ];
 
     return (
@@ -36,6 +41,17 @@ function EventDetail() {
                 <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
                 <Breadcrumb.Item active>Event Detail</Breadcrumb.Item>
             </Breadcrumb>
+            <Modal show={ show } variant="success">
+                <Modal.Header closeButton>
+                    <Modal.Title>Question Successfully Submitted</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Your question has been successfully submitted for approval.</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={ () => setShow( false ) }>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Event Detail</h2>
                 <Row className="mb-3">
@@ -43,60 +59,65 @@ function EventDetail() {
                         < Card
                             bg={ 'light' }
                             key={ eventDetailState.currentEvent.id } >
-                            <Card.Body>
-                                <Card.Title >{ eventDetailState.currentEvent.name }</Card.Title>
-                                <p>Event Date: { eventDetailState.currentEvent.eventDate }</p>
-                                <Form className="EventDetailForm" id="EventDetailForm">
-                                    <Form.Group className="mb-3" controlId="formEventDetail" onKeyDown={ ( evt ) => processAddQuestion( evt, dispatch ) } >
-                                        <table className="question-table" id="question-table">
-                                            <thead>
-                                                <tr>
-                                                    <th align="center">Question</th>
-                                                    <th align="center">Ranking</th>
-                                                    <th align="center"></th>
-                                                    <th colSpan="4" align="center">Rating</th>
+                            <Card.Header as="h4">{ eventDetailState.currentEvent.name }</Card.Header>
+                            <Card.Body >
+                                <Table borderless>
+                                    <tbody>
+                                        <tr><td><b>Event Date:</b>&nbsp;&nbsp;&nbsp; { eventDetailState.currentEvent.eventDate }</td></tr>
+                                        <tr>
+                                            <td><b>Description:</b>&nbsp;&nbsp;&nbsp;{ eventDetailState.currentEvent.description }</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+
+                                <Table>
+                                    <thead>
+                                        <tr>
+                                            <th >Question</th>
+                                            <th >Ranking</th>
+                                            <th >Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        { ( eventDetailState.currentEvent.questions !== null && eventDetailState.currentEvent.questions !== undefined ) ? [ ...eventDetailState.currentEvent.questions ].sort( ( a, b ) =>
+                                            b.ranking - a.ranking
+                                        ).filter( // filter approved questions
+                                            qVal => ( qVal.approved === true ) ).map( qVal => (
+                                                < tr key={ qVal.qid } >
+                                                    <td>{ qVal.question }</td>
+                                                    <td>{ qVal.ranking }</td>
+                                                    <td>
+                                                        <ButtonGroup>
+                                                            { radios.map( ( radio, idx ) => (
+                                                                <ToggleButton
+                                                                    key={ qVal.qid + "-" + idx }
+                                                                    id={ `radio-${ qVal.qid }-${ idx }` }
+                                                                    type="radio"
+                                                                    variant="primary"
+                                                                    name={ `radio-${ qVal.qid }` }
+                                                                    value={ radio.value }
+                                                                    disabled={ setButtonGroupState( eventDetailState.currentEvent.id, qVal.qid, idx ) }
+                                                                    onChange={ ( e ) => processButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
+                                                                    }
+                                                                >
+                                                                    { radio.name }
+                                                                </ToggleButton>
+                                                            ) ) }
+                                                        </ButtonGroup>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                { ( eventDetailState.currentEvent.questions !== null && eventDetailState.currentEvent.questions !== undefined ) ? [ ...eventDetailState.currentEvent.questions ].sort( ( a, b ) =>
-                                                    b.ranking - a.ranking
-                                                ).filter( // filter approved questions
-                                                    qVal => ( qVal.approved === true ) ).map( qVal => (
-                                                        < tr key={ qVal.qid } >
-                                                            <td>{ qVal.question }</td>
-                                                            <td>{ qVal.ranking }</td>
-                                                            <td colSpan="5">
-                                                                <ButtonGroup className="like-buttons">
-                                                                    { radios.map( ( radio, idx ) => (
-                                                                        <ToggleButton
-                                                                            key={ qVal.qid + "-" + idx }
-                                                                            id={ `radio-${ qVal.qid }-${ idx }` }
-                                                                            type="radio"
-                                                                            variant="primary"
-                                                                            name={ `radio-${ qVal.qid }` }
-                                                                            value={ radio.value }
-                                                                            disabled={ setButtonGroupState( eventDetailState.currentEvent.id, qVal.qid, idx ) }
-                                                                            onChange={ ( e ) => processButtonChange( e, eventDetailState.currentEvent.id, qVal.qid, dispatch )
-                                                                            }
-                                                                        >
-                                                                            { radio.name }
-                                                                        </ToggleButton>
-                                                                    ) ) }
-                                                                </ButtonGroup>
-
-                                                            </td>
-                                                        </tr>
-                                                    ) ) : <tr><td colSpan="7"><p>No Questions Found</p></td></tr> }
-                                            </tbody>
-                                        </table>
-
-                                        <div>
-                                            <Form.Label>Question</Form.Label>
-                                            <Form.Control type="text" placeholder="Enter question" />
-                                        </div>
+                                            ) ) : <tr><td><p>No Questions Found</p></td></tr> }
+                                    </tbody>
+                                </Table>
+                            </Card.Body>
+                            <Card.Footer>
+                                <Form className="EventDetailForm" id="EventDetailForm">
+                                    <Form.Group className="mb-3" controlId="formEventDetail" onKeyDown={ ( evt ) => { processAddQuestion( evt, dispatch, setShow ); } } >
+                                        <Form.Label>Add a question:</Form.Label>
+                                        <Form.Control type="text" placeholder="Enter question" />
                                     </Form.Group>
                                 </Form>
-                            </Card.Body>
+                            </Card.Footer>
                         </Card>
                     </Col >
                 </Row >

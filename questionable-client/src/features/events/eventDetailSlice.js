@@ -201,7 +201,7 @@ const modifyEvent = ( updatedEvent, dispatch ) => {
         } );
 }
 
-function processAddQuestion( event, dispatch ) {
+function processAddQuestion( event, dispatch, setShow ) {
     //console.log( "Add Question" );
     //console.log( event );
 
@@ -215,11 +215,13 @@ function processAddQuestion( event, dispatch ) {
             // set the ranking to 0
             // add the question to the state
             // clear the input field
-            event.target.value = "Enter question";
+            event.target.value = "";
 
             //console.log( "Adding question: " + newQuestion );
             //debugger
             dispatch( { type: "currentEvent/addQuestion", payload: newQuestion } );
+
+            setShow( true );
         }
     }
 }
