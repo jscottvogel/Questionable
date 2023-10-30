@@ -43,6 +43,15 @@ function AdminUpdateEventDetail() {
         navigate( `/admin` );
     }
 
+    function handleReset( e ) {
+        e.preventDefault();
+
+        e.currentTarget.UpdateEventName.value = eventDetailState.currentEvent.name;
+        e.currentTarget.UpdateEventDescription.value = eventDetailState.currentEvent.description;
+        e.currentTarget.UpdateEventDate.value = stringToDate( eventDetailState.currentEvent.eventDate ).toISOString().substring( 0, 10 );
+
+    }
+
     return (
         <>
             <Breadcrumb>
@@ -58,7 +67,7 @@ function AdminUpdateEventDetail() {
                             key={ eventDetailState.currentEvent.id } >
                             <Card.Header as="h4">{ eventDetailState.currentEvent.name }</Card.Header>
                             <Card.Body>
-                                <Form className="UpdateEventDetailForm" id="UpdateEventDetailForm" onSubmit={ ( e ) => handleSubmit( e, eventDetailState.currentEvent.id, dispatch ) } >
+                                <Form className="UpdateEventDetailForm" id="UpdateEventDetailForm" onSubmit={ ( e ) => handleSubmit( e, eventDetailState.currentEvent.id, dispatch ) } onReset={ handleReset }>
                                     <Form.Group className="mb-3" controlId="formUpdateEventDetail">
                                         <Form.Label>Event Name</Form.Label>
                                         <Form.Control required name="UpdateEventName" type="text" placeholder="Enter event name" defaultValue={ eventDetailState.currentEvent.name } />

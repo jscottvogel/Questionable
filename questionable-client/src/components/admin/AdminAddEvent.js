@@ -23,6 +23,14 @@ function AdminAddEvent() {
         navigate( '/admin' );
     }
 
+    function handleReset( e ) {
+        e.preventDefault();
+
+        e.currentTarget.AddEventName.value = "";
+        e.currentTarget.AddEventDescription.value = "";
+        e.currentTarget.AddEventDate.value = ( new Date() ).toISOString().substring( 0, 10 );
+    }
+
     return (
         <>
             <Breadcrumb>
@@ -37,7 +45,7 @@ function AdminAddEvent() {
                             bg={ 'light' } >
                             <Card.Header as="h4">{ "New Event" }</Card.Header>
                             <Card.Body>
-                                <Form className="AddEventForm" id="AddEventForm" onSubmit={ ( e ) => handleSubmit( e ) } >
+                                <Form className="AddEventForm" id="AddEventForm" onSubmit={ ( e ) => handleSubmit( e ) } onReset={ handleReset } >
                                     <Form.Group className="mb-3" controlId="formAddEvent">
                                         <Form.Label>Event Name</Form.Label>
                                         <Form.Control name="AddEventName" type="text" required placeholder="Enter event name" />

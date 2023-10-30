@@ -20,11 +20,21 @@ export default function ForgotPassword() {
         e.preventDefault()
         setError( "" )
 
-        forgotPassword( username ).then( () => {
-            navigate( "/reset-password" );
-        } ).catch( err => {
-            setError( err.message );
-        } );
+        forgotPassword( username ).then(
+            function ( result ) {
+                navigate( "/reset-password" );
+            },
+            function ( error ) {
+                setError( error.message );
+            }
+        );
+    }
+
+    const handleReset = ( e ) => {
+        e.preventDefault();
+
+        setUsername( "" );
+        setError( "" )
     }
 
     return (
@@ -35,7 +45,7 @@ export default function ForgotPassword() {
             </Breadcrumb>
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Forgot Password</h2>
-                <Form noValidate onSubmit={ handleSubmit }>
+                <Form noValidate onSubmit={ handleSubmit } onReset={ handleReset } >
                     <Row className="mb-3">
                         <Col className="mb-3">
                         </Col>

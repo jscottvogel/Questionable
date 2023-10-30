@@ -16,13 +16,28 @@ export default function SignUp() {
 
     const handleSubmit = async ( e ) => {
         e.preventDefault()
-        setError( "" )
 
-        signUp( username, email, password ).then( () => {
-            navigate( "/confirm-sign-up" );
-        } ).catch( err => {
-            setError( err.message )
-        } );
+        signUp( username, email, password ).then(
+            function ( result ) {
+                setError( "" )
+                navigate( "/confirm-sign-up" );
+            },
+            function ( error ) {
+                setError( error.message )
+                setUsername( "" );
+                setPassword( "" );
+                setEmail( "" );
+            }
+        );
+    }
+
+    const handleReset = ( e ) => {
+        e.preventDefault();
+
+        setUsername( "" );
+        setPassword( "" );
+        setEmail( "" );
+        setError( "" );
     }
 
     return (
@@ -33,7 +48,7 @@ export default function SignUp() {
             </Breadcrumb>
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Sign Up</h2>
-                <Form noValidate onSubmit={ handleSubmit }>
+                <Form noValidate onSubmit={ handleSubmit } onReset={ handleReset } >
                     <Row className="mb-3">
                         <Col className="mb-3">
                         </Col>

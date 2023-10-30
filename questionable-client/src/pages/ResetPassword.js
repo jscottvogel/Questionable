@@ -24,12 +24,26 @@ export default function ResetPassword() {
         setSuccess( "" )
         setShow( false );
 
-        confirmPassword( username, confirmationCode, newPassword ).then( () => {
-            setSuccess( "Your password has been reset successfully!" )
-            setShow( true );
-        } ).catch( ( err ) => {
-            setError( err.message )
-        } );
+        confirmPassword( username, confirmationCode, newPassword ).then(
+            function ( result ) {
+                setSuccess( "Your password has been reset successfully!" )
+                setShow( true );
+            },
+            function ( error ) {
+                setError( error.message );
+            }
+        );
+    }
+
+    const handleReset = ( e ) => {
+        e.preventDefault();
+
+        setUsername( "" );
+        setConfirmationCode( "" );
+        setNewPassword( "" );
+        setError( "" )
+        setSuccess( "" )
+        setShow( false );
     }
 
     return (
@@ -51,7 +65,7 @@ export default function ResetPassword() {
             </Modal>
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Reset Password</h2>
-                <Form noValidate onSubmit={ handleSubmit }>
+                <Form noValidate onSubmit={ handleSubmit } onReset={ handleReset } >
                     <Row className="mb-3">
                         <Col className="mb-3">
                         </Col>

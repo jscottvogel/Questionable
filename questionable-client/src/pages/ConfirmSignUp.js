@@ -14,7 +14,7 @@ export default function ConfirmSignUp() {
     const [ username, setUsername ] = useState( "" )
     const [ code, setCode ] = useState( "" )
     const [ error, setError ] = useState( "" )
-    const [ success, setSuccess ] = useState( false )
+    const [ success, setSuccess ] = useState( "" )
     const [ show, setShow ] = useState( false )
 
     const handleSubmit = async ( e ) => {
@@ -23,12 +23,26 @@ export default function ConfirmSignUp() {
         setSuccess( "" )
         setShow( false );
 
-        confirmSignUp( username, code ).then( () => {
-            setSuccess( "Confirmation successful! Please login to use the app." )
-            setShow( true );
-        } ).catch( ( err ) => {
-            setError( err.message )
-        } );
+        confirmSignUp( username, code ).then(
+            function ( result ) {
+                setSuccess( "Confirmation successful! Please login to use the app." )
+                setShow( true );
+            },
+            function ( error ) {
+                setError( error.message );
+            }
+        );
+
+    }
+
+    const handleReset = ( e ) => {
+        e.preventDefault();
+
+        setUsername( "" );
+        setCode( "" );
+        setError( "" )
+        setSuccess( "" )
+        setShow( false );
     }
 
     return (
@@ -50,7 +64,7 @@ export default function ConfirmSignUp() {
             </Modal>
             <Container bg="light">
                 <h2 className="md-auto text-center p-4">Confirm Sign Up</h2>
-                <Form noValidate onSubmit={ handleSubmit }>
+                <Form noValidate onSubmit={ handleSubmit } onReset={ handleReset } >
                     <Row className="mb-3">
                         <Col className="mb-3">
                         </Col>
