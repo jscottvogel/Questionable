@@ -51,7 +51,7 @@ export function getSession() {
     } )
 }
 
-export async function getCurrentUser() {
+export function getCurrentUser() {
     return new Promise( ( resolve, reject ) => {
         const cognitoUser = userPool.getCurrentUser()
 
@@ -126,7 +126,7 @@ export function forgotPassword( username ) {
 
         cognitoUser.forgotPassword( {
             onSuccess: function ( result ) {
-                console.log( 'call result: ' + result );
+                //console.log( 'call result: ' + result );
                 resolve( result );
             },
             onFailure: function ( err ) {

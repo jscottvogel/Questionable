@@ -27,7 +27,7 @@ function EventList() {
                 <h2 className="md-auto text-center p-4">Upcoming Events</h2>
                 <Row className="mb-3">
                     <Col className="mb-3">
-                        { eventState.events.filter( event => event.isActive === true ).map( event => (
+                        { eventState.events.filter( event => validEvent( event ) ).map( event => (
                             <Card
                                 bg={ 'light' }
                                 key={ event.id }>
@@ -59,6 +59,27 @@ function EventList() {
 
 
         </> );
+}
+
+function validEvent( event ) {
+
+    if ( event !== null && event !== undefined ) {
+        //console.log( event );
+
+        if ( event.isActive === true ) {
+            let today = new Date();
+            let eventDate = new Date( event.eventDate );
+
+            //console.log( eventDate.getTime() );
+            //console.log( today.getTime() );
+
+            if ( eventDate.getTime() >= today.getTime() ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 export default EventList;

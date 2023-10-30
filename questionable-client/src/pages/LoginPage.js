@@ -16,39 +16,25 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
 
-    const { user, signIn, signOut } = useContext( AuthContext )
+    const { user, signIn, signOut, getCurrentUser } = useContext( AuthContext )
 
     const handleSubmit = ( event ) => {
         //const form = event.currentTarget;
-        setError( "Invalid username or password" );
 
         //if ( form.checkValidity() === false ) {
         event.preventDefault();
         event.stopPropagation();
 
-        try {
-            //console.log( "Login: ", username, password );
-            signIn( username, password )
-            // Redirect to the app's main page or dashboard
-
-            // If the user is logged in, don't show the login form
-            //console.log( "User: ", user );
-            if ( user ) {
-                // Redirect to the admin dashboard page
-
-                return navigate( "/admin" );
-            } else {
-                setError( "Invalid username or password" );
-                setUsername( "" );
-                setPassword( "" );
-            }
-
-        } catch ( err ) {
-            setError( err.message )
+        //console.log( "Login: ", username, password );
+        // wait for all promises to resolve
+        signIn( username, password ).then( ( user ) => {
+            //console.log( user );
+            return navigate( "/admin" );
+        } ).catch( ( err ) => {
+            setError( "Invalid username or password" );
             setUsername( "" );
             setPassword( "" );
-        }
-        //}
+        } );
     };
 
     const handleReset = ( e ) => {

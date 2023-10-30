@@ -9,23 +9,19 @@ function AuthProvider( { children } ) {
     const [ isLoading, setIsLoading ] = useState( true );
 
     const getCurrentUser = () => {
-        auth.getCurrentUser().then( ( user ) => {
-            setUser( user );
+        setIsLoading( true );
+        // wait for all the promises to resolve
+        return Promise.all( [ auth.getCurrentUser(), auth.getSession() ] ).then( ( values ) => {
+            //console.log( values );
+            setUser( values[ 0 ] );
+            setSession( values[ 1 ] );
             setIsLoading( false );
-
-            auth.getSession().then( ( session ) => {
-                setSession( session );
-            } ).catch( ( err ) => {
-                //console.log( err );
-                setUser( null );
-                setIsLoading( false );
-            } );
         } ).catch( ( err ) => {
-            //console.log( err );
+            console.log( err );
             setUser( null );
+            setSession( null );
             setIsLoading( false );
-        }
-        );
+        } );
     }
 
     useEffect( () => {
@@ -33,19 +29,13 @@ function AuthProvider( { children } ) {
     }, [] )
 
     const signIn = ( username, password ) => {
-        auth.signIn( username, password ).then( ( user ) => {
+        setIsLoading( true );
+
+        return auth.signIn( username, password ).then( ( user ) => {
             setUser( user );
             setIsLoading( false );
-
-            auth.getSession().then( ( session ) => {
-                setSession( session );
-            } ).catch( ( err ) => {
-                //console.log( err );
-                setUser( null );
-                setIsLoading( false );
-            } );
         } ).catch( ( err ) => {
-            //console.log( err );
+            console.log( err );
             setUser( null );
             setIsLoading( false );
         } );
@@ -70,6 +60,7 @@ function AuthProvider( { children } ) {
         session,
         signIn,
         signOut,
+        getCurrentUser
     }
 
     return (
