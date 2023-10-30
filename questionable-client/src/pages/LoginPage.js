@@ -16,42 +16,38 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
 
-    const { user, signIn, signOut, getCurrentUser } = useContext( AuthContext )
+    const { signIn, signOut } = useContext( AuthContext )
 
     const handleSubmit = ( event ) => {
-        //const form = event.currentTarget;
-
-        //if ( form.checkValidity() === false ) {
         event.preventDefault();
         event.stopPropagation();
 
-        //console.log( "Login: ", username, password );
-        // wait for all promises to resolve
-        signIn( username, password ).then( ( user ) => {
-            //console.log( user );
-            return navigate( "/admin" );
-        } ).catch( ( err ) => {
-            setError( "Invalid username or password" );
-            setUsername( "" );
-            setPassword( "" );
-        } );
+        signIn( username, password ).then(
+            function ( result ) {
+                navigate( "/admin" );
+            },
+            function ( error ) {
+                setError( "Invalid username or password" );
+                setUsername( "" );
+                setPassword( "" );
+            }
+        );
     };
 
     const handleReset = ( e ) => {
-        e.preventDefault()
-        setError( "" )
+        e.preventDefault();
 
-        try {
-            signOut( username, password )
-
-            setUsername( "" );
-            setPassword( "" );
-        } catch ( err ) {
-            setError( err.message )
-            setUsername( "" );
-            setPassword( "" );
-        }
-
+        signOut( username, password ).then(
+            function ( result ) {
+                setUsername( "" );
+                setPassword( "" );
+            },
+            function ( error ) {
+                setError( error.message )
+                setUsername( "" );
+                setPassword( "" );
+            }
+        );
     }
 
     return (
