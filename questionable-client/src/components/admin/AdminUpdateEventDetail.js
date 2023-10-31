@@ -83,7 +83,7 @@ function AdminUpdateEventDetail() {
                                         Submit
                                     </Button>
                                     &nbsp;
-                                    <Button variant="secondary" type="reset">
+                                    <Button variant="primary" type="reset">
                                         Reset
                                     </Button>
                                 </Form>

@@ -7,14 +7,35 @@ import { Row } from "react-bootstrap"
 import { Col } from "react-bootstrap"
 import { Card } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import { useState } from "react"
+import { useEffect } from "react"
 
 export default function UserProfile() {
-    const { user, session } = useContext( AuthContext )
+    const [ administrator, setAdministrator ] = useState( false );
+
+    const { user, session, isAdmin } = useContext( AuthContext )
+
+    useEffect( () => {
+        isAdmin().then(
+            function ( result ) {
+                //console.log( "isAdmin() returned " + result );
+                if ( result === true ) {
+                    setAdministrator( true );
+                } else {
+                    setAdministrator( false );
+                }
+            },
+            function ( error ) {
+                setAdministrator( false );
+            }
+        );
+    } );
 
     return (
         <div>
             <Breadcrumb>
-                <Breadcrumb.Item href="/admin">Admin Dashboard</Breadcrumb.Item>
+                { administrator && <Breadcrumb.Item href="/admin">Admin Dashboard</Breadcrumb.Item> }
+                { !administrator && <Breadcrumb.Item href="/">Upcoming Events</Breadcrumb.Item> }
                 <Breadcrumb.Item active>User Profile</Breadcrumb.Item>
             </Breadcrumb>
             <Container bg="light">

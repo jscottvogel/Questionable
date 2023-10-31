@@ -61,9 +61,9 @@ function AuthProvider( { children } ) {
         return auth.getSession().then(
             function ( sess ) {
                 if ( sess.accessToken && sess.accessToken.payload && sess.accessToken.payload[ "cognito:groups" ] ) {
-                    console.log( "Got Session" );
+                    //console.log( "Got Session" );
                     setSession( sess );
-                    console.log( sess.accessToken.payload[ "cognito:groups" ] );
+                    //console.log( sess.accessToken.payload[ "cognito:groups" ] );
                     return sess.accessToken.payload[ "cognito:groups" ].includes( "Administrators" );
                 } else {
                     console.log( "No session available" );

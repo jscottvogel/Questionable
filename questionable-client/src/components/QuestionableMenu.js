@@ -12,7 +12,7 @@ function QuestionableMenu() {
     useEffect( () => {
         isAdmin().then(
             function ( result ) {
-                console.log( "isAdmin() returned " + result );
+                //console.log( "isAdmin() returned " + result );
                 if ( result === true ) {
                     setAdministrator( true );
                 } else {
