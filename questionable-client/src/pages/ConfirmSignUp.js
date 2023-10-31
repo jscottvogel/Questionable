@@ -9,6 +9,9 @@ import { Col } from "react-bootstrap"
 import { Card } from "react-bootstrap"
 import { Button } from "react-bootstrap"
 import { Modal } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import { AuthContext } from "../AuthContext"
 
 export default function ConfirmSignUp() {
     const [ username, setUsername ] = useState( "" )
@@ -17,11 +20,16 @@ export default function ConfirmSignUp() {
     const [ success, setSuccess ] = useState( "" )
     const [ show, setShow ] = useState( false )
 
+    const navigate = useNavigate();
+
+    const { signOut } = useContext( AuthContext )
+
     const handleSubmit = async ( e ) => {
         e.preventDefault()
         setError( "" )
         setSuccess( "" )
         setShow( false );
+        signOut();
 
         confirmSignUp( username, code ).then(
             function ( result ) {
@@ -45,6 +53,12 @@ export default function ConfirmSignUp() {
         setShow( false );
     }
 
+    function handleSuccess() {
+        signOut();
+        setShow( false );
+        navigate( "/login" );
+    }
+
     return (
         <div>
             <Breadcrumb>
@@ -57,7 +71,7 @@ export default function ConfirmSignUp() {
                 </Modal.Header>
                 <Modal.Body>{ success }</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={ () => setShow( false ) }>
+                    <Button variant="secondary" onClick={ () => handleSuccess() }>
                         Close
                     </Button>
                 </Modal.Footer>

@@ -16,15 +16,31 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
 
-    const { signIn, signOut } = useContext( AuthContext )
+    const { signIn, signOut, isAdmin } = useContext( AuthContext )
 
     const handleSubmit = ( event ) => {
         event.preventDefault();
         event.stopPropagation();
 
         signIn( username, password ).then(
-            function ( result ) {
-                navigate( "/admin" );
+            function ( res ) {
+                //console.log( "Calling isAdmin()" );
+                isAdmin().then(
+                    function ( result ) {
+                        //console.log( "isAdmin() returned " + result );
+
+                        if ( result ) {
+                            //console.log( "Going to Admin page" );
+                            navigate( "/admin" );
+                        } else {
+                            //console.log( "Going to regular page" );
+                            navigate( "/" );
+                        }
+                    },
+                    function ( error ) {
+                        console.log( "isAdmin() returned " + error );
+                    }
+                );
             },
             function ( error ) {
                 setError( "Invalid username or password" );
@@ -37,7 +53,7 @@ export default function LoginPage() {
     const handleReset = ( e ) => {
         e.preventDefault();
 
-        signOut( username, password ).then(
+        signOut().then(
             function ( result ) {
                 setUsername( "" );
                 setPassword( "" );

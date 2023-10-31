@@ -22,7 +22,7 @@ function AdminRouteGuard( { children } ) {
                 //console.log( session.idToken.payload[ 'cognito:groups' ] );
                 let groups = session.idToken.payload[ 'cognito:groups' ];
                 //console.log( groups );
-                if ( groups.length === 0 || !groups.includes( "Administrators" ) ) {
+                if ( groups === null || groups === undefined || groups.length === undefined || groups.length === 0 || !groups.includes( "Administrators" ) ) {
                     return <Navigate to="/" />
                 }
             }

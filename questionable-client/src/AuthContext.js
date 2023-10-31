@@ -14,6 +14,7 @@ function AuthProvider( { children } ) {
         return Promise.all( [ auth.getCurrentUser(), auth.getSession() ] ).then( ( values ) => {
             //console.log( values );
             setUser( values[ 0 ] );
+            //console.log( values[ 1 ] );
             setSession( values[ 1 ] );
             setIsLoading( false );
         } ).catch( ( err ) => {
@@ -34,6 +35,7 @@ function AuthProvider( { children } ) {
         return auth.signIn( username, password ).then( ( user ) => {
             setUser( user );
             setIsLoading( false );
+            getCurrentUser();
         } ).catch( ( err ) => {
             console.log( err );
             setUser( null );
@@ -42,7 +44,7 @@ function AuthProvider( { children } ) {
     }
 
     const signOut = () => {
-        auth.signOut().then( () => {
+        return auth.signOut().then( () => {
             setUser( null );
             setSession( null );
             setIsLoading( false );
@@ -54,13 +56,35 @@ function AuthProvider( { children } ) {
         } );
     }
 
+    const isAdmin = () => {
+
+        return auth.getSession().then(
+            function ( sess ) {
+                if ( sess.accessToken && sess.accessToken.payload && sess.accessToken.payload[ "cognito:groups" ] ) {
+                    console.log( "Got Session" );
+                    setSession( sess );
+                    console.log( sess.accessToken.payload[ "cognito:groups" ] );
+                    return sess.accessToken.payload[ "cognito:groups" ].includes( "Administrators" );
+                } else {
+                    console.log( "No session available" );
+                    return false;
+                }
+            },
+            function ( error ) {
+                console.log( error );
+                return false;
+            }
+        );
+    }
+
     const authValue = {
         user,
         isLoading,
         session,
         signIn,
         signOut,
-        getCurrentUser
+        getCurrentUser,
+        isAdmin,
     }
 
     return (

@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { AuthContext } from '../AuthContext';
 import { useContext } from 'react';
+import { useState } from 'react';
 
 function QuestionableMenu() {
+    const [ administrator, setAdministrator ] = useState( false );
 
-    const { user } = useContext( AuthContext )
+    const { user, isAdmin } = useContext( AuthContext )
+
+    useEffect( () => {
+        isAdmin().then(
+            function ( result ) {
+                console.log( "isAdmin() returned " + result );
+                if ( result === true ) {
+                    setAdministrator( true );
+                } else {
+                    setAdministrator( false );
+                }
+            },
+            function ( error ) {
+                setAdministrator( false );
+            }
+        );
+    } );
 
     return (
         <div>
@@ -21,15 +39,15 @@ function QuestionableMenu() {
                             }
 
                             {/* if user is logged in, show the following links */ }
-                            { user && (
+                            { user && administrator &&
                                 <Nav.Link href="/admin">Admin Dashboard</Nav.Link>
-                            ) }
-                            { user && (
+                            }
+                            { user &&
                                 <Nav.Link href="/profile">Profile</Nav.Link>
-                            ) }
-                            { user && (
+                            }
+                            { user &&
                                 <Nav.Link href="/logout">Sign Out</Nav.Link>
-                            ) }
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

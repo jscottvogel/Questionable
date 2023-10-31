@@ -30,7 +30,7 @@ export default function UserProfile() {
                                 <Card.Body >
                                     <Form.Group className="mb-3" controlId="formUserProfileUsername" >
                                         <Form.Label>Username:</Form.Label>
-                                        <Form.Control required maxLength="32" type="text" placeholder="Username" value={ user.username } readonly />
+                                        <Form.Control required maxLength="32" type="text" placeholder="Username" value={ user.username } readOnly />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formUserProfileEmail" >
                                         <Form.Label>Email:</Form.Label>

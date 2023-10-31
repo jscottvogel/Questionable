@@ -5,6 +5,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Form, Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import { Breadcrumb } from 'react-bootstrap';
+import { useContext } from "react"
+import { AuthContext } from "../AuthContext"
 
 export default function SignUp() {
     const [ username, setUsername ] = useState( "" )
@@ -14,8 +16,12 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
+    const { signOut } = useContext( AuthContext );
+
     const handleSubmit = async ( e ) => {
         e.preventDefault()
+
+        signOut();
 
         signUp( username, email, password ).then(
             function ( result ) {

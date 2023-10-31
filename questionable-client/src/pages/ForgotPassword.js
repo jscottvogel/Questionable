@@ -9,6 +9,8 @@ import { Col } from "react-bootstrap"
 import { Card } from "react-bootstrap"
 import { Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import { useContext } from "react"
+import { AuthContext } from "../AuthContext"
 
 export default function ForgotPassword() {
     const [ username, setUsername ] = useState( "" )
@@ -16,12 +18,15 @@ export default function ForgotPassword() {
 
     const navigate = useNavigate();
 
+    const { signOut } = useContext( AuthContext );
+
     const handleSubmit = ( e ) => {
         e.preventDefault()
         setError( "" )
 
         forgotPassword( username ).then(
             function ( result ) {
+                signOut();
                 navigate( "/reset-password" );
             },
             function ( error ) {
