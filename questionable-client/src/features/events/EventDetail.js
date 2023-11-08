@@ -90,7 +90,7 @@ function EventDetail() {
                                                         <td>
                                                             <ButtonGroup>
                                                                 { radios.map( ( radio, idx ) => (
-                                                                    <ToggleButton style={ { fontSize: "10px" } }
+                                                                    <ToggleButton style={ { fontSize: "8px" } }
                                                                         key={ qVal.qid + "-" + idx }
                                                                         id={ `radio-${ qVal.qid }-${ idx }` }
                                                                         type="radio"
