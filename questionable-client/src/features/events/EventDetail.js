@@ -30,9 +30,9 @@ function EventDetail() {
     }, [ dispatch, eventDetailState, id ] );
 
     const radios = [
-        { name: '+1', value: '1' },
+        { name: '+', value: '1' },
         { name: '0', value: '0' },
-        { name: '-1', value: '-1' },
+        { name: '-', value: '-1' },
     ];
 
     return (
@@ -90,7 +90,7 @@ function EventDetail() {
                                                         <td>
                                                             <ButtonGroup>
                                                                 { radios.map( ( radio, idx ) => (
-                                                                    <ToggleButton style={ { fontSize: "8px" } }
+                                                                    <ToggleButton
                                                                         key={ qVal.qid + "-" + idx }
                                                                         id={ `radio-${ qVal.qid }-${ idx }` }
                                                                         type="radio"
