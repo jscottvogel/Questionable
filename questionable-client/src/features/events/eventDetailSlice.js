@@ -23,6 +23,9 @@ const eventDetailSlice = createSlice( {
                 }
             }
         },
+        refreshEventDetail: ( state, action ) => {
+            state.currentEvent = action.payload[ 0 ];
+        },
         addQuestion: ( state, action ) => {
             // add the question to the event
 
@@ -156,6 +159,20 @@ const fetchEventDetail = ( dispatch, getState, id ) => {
     // todo, error condition
 }
 
+const reloadEventDetails = ( dispatch, getState, id ) => {
+    //console.log( "Refreshing event detail for event " + id );
+    // Make an async HTTP request
+    return fetch( `${ proxyUrl }/api/event/${ id }`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
+    } ).then( res => { const evts = res.json(); return evts; } )
+        .then( evts => {
+            dispatch( { type: "currentEvent/refreshEventDetail", payload: evts } );
+        } ).catch( err => console.log( err ) );
+    // todo, error condition
+}
+
 const processAdjustment = ( eventId, questionId, adjustment, dispatch ) => {
     //console.log( "Making Adjustment: " + adjustment );
     return fetch( `${ proxyUrl }/api/event/${ eventId }/question/${ questionId }/ranking`, {
@@ -272,9 +289,9 @@ function processQuestionApproval( eventId, questionId, approvedVal, dispatch ) {
     // todo, error condition
 }
 
-export const { loadEventDetail, addQuestion, adjustQuestionRanking, updateEvent, toggleCanAddQuestions } = eventDetailSlice.actions;
+export const { loadEventDetail, addQuestion, adjustQuestionRanking, updateEvent, toggleCanAddQuestions, refreshEventDetail } = eventDetailSlice.actions;
 
-export { fetchEventDetail, processAdjustment, modifyEvent, stringToDate, processAddQuestion, processQuestionApproval };
+export { fetchEventDetail, processAdjustment, modifyEvent, stringToDate, processAddQuestion, processQuestionApproval, reloadEventDetails };
 
 export default eventDetailSlice.reducer;
 

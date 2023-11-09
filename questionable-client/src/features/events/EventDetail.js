@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { fetchEventDetail } from './eventDetailSlice';
+import { reloadEventDetails } from './eventDetailSlice';
 import { processAdjustment } from './eventDetailSlice';
 import { Breadcrumb } from 'react-bootstrap';
 import { ButtonGroup, ToggleButton } from 'react-bootstrap';
@@ -27,6 +28,12 @@ function EventDetail() {
 
     useEffect( () => {
         fetchEventDetail( dispatch, eventDetailState, id );
+
+        const intervalId = setInterval( () => {
+            reloadEventDetails( dispatch, eventDetailState, id );
+        }, 10000 );
+
+        return () => clearInterval( intervalId );
     }, [ dispatch, eventDetailState, id ] );
 
     const radios = [
