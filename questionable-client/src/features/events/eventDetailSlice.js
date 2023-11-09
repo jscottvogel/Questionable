@@ -134,7 +134,11 @@ const eventDetailSlice = createSlice( {
             }
         },
         deleteQuestion: ( state, action ) => {
-        }
+        },
+        toggleCanAddQuestions: ( state, action ) => {
+            //console.log( "toggleCanAddQuestions: " + action.payload );
+            state.currentEvent.canAddQuestions = action.payload;
+        },
     }
 } );
 
@@ -268,7 +272,7 @@ function processQuestionApproval( eventId, questionId, approvedVal, dispatch ) {
     // todo, error condition
 }
 
-export const { loadEventDetail, addQuestion, adjustQuestionRanking, updateEvent } = eventDetailSlice.actions;
+export const { loadEventDetail, addQuestion, adjustQuestionRanking, updateEvent, toggleCanAddQuestions } = eventDetailSlice.actions;
 
 export { fetchEventDetail, processAdjustment, modifyEvent, stringToDate, processAddQuestion, processQuestionApproval };
 

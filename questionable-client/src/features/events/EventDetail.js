@@ -113,12 +113,14 @@ function EventDetail() {
                                 </Form>
                             </Card.Body>
                             <Card.Footer>
-                                <Form className="EventDetailAddQuestionForm" id="EventDetailAddQuestionForm">
+                                {/* if event.canAddQuestions not null not undefined and true, then show the add question form */ }
+                                { ( eventDetailState.currentEvent.canAddQuestions !== null && eventDetailState.currentEvent.canAddQuestions !== undefined && eventDetailState.currentEvent.canAddQuestions === true ) ? <Form className="EventDetailAddQuestionForm" id="EventDetailAddQuestionForm">
                                     <Form.Group className="mb-3" controlId="formEventDetail" onKeyDown={ ( evt ) => { processAddQuestion( evt, dispatch, setShow ); } } >
                                         <Form.Label>Add a question:</Form.Label>
                                         <Form.Control type="text" placeholder="Enter question" />
                                     </Form.Group>
                                 </Form>
+                                    : <p>Questions can no longer be added to this event.</p> }
                             </Card.Footer>
                         </Card>
                     </Col >

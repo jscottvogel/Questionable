@@ -173,7 +173,8 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
                     eventDate: event.eventDate,
                     isActive: event.isActive ? event.isActive : false,
                     description: event.description ? event.description : "",
-                    questions: event.questions
+                    questions: event.questions,
+                    canAddQuestions: event.canAddQuestions ? event.canAddQuestions : false
                 }
             };
 
@@ -195,12 +196,13 @@ module.exports = class EventDynamoDBImpl extends EventDAO {
                 Key: {
                     "id": event.id
                 },
-                UpdateExpression: "SET #n = :nm, eventDate = :dt, isActive = :is, description = :desc",
+                UpdateExpression: "SET #n = :nm, eventDate = :dt, isActive = :is, description = :desc, canAddQuestions = :canAddQuestions",
                 ExpressionAttributeValues: {
                     ":nm": event.name,
                     ":dt": event.eventDate,
                     ":is": event.isActive ? event.isActive : false,
-                    ":desc": event.description ? event.description : ""
+                    ":desc": event.description ? event.description : "",
+                    ":canAddQuestions": event.canAddQuestions ? event.canAddQuestions : false
                 },
                 ExpressionAttributeNames: {
                     "#n": "name"

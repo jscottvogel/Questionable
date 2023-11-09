@@ -7,6 +7,7 @@ import '../../app/App.css';
 import { useNavigate } from 'react-router-dom';
 import { addNewEvent } from '../../features/events/eventsSlice';
 import { Card } from 'react-bootstrap';
+import { MDBCheckbox } from 'mdb-react-ui-kit';
 
 function AdminAddEvent() {
 
@@ -18,7 +19,11 @@ function AdminAddEvent() {
         let eventName = e.currentTarget.AddEventName.value;
         let eventDate = e.currentTarget.AddEventDate.value;
         let eventDescription = e.currentTarget.AddEventDescription.value;
-        addNewEvent( { "name": eventName, "eventDate": eventDate, "questions": [], "isActive": true, "description": eventDescription }, dispatch );
+        let eventCanAddQuestions = e.currentTarget.AddEventCanAddQuestions.checked ? true : false;
+
+        //console.log( eventCanAddQuestions );
+
+        addNewEvent( { "name": eventName, "eventDate": eventDate, "questions": [], "isActive": true, "description": eventDescription, "canAddQuestions": eventCanAddQuestions }, dispatch );
 
         navigate( '/admin' );
     }
@@ -29,6 +34,7 @@ function AdminAddEvent() {
         e.currentTarget.AddEventName.value = "";
         e.currentTarget.AddEventDescription.value = "";
         e.currentTarget.AddEventDate.value = ( new Date() ).toISOString().substring( 0, 10 );
+        e.currentTarget.AddEventCanAddQuestions.checked = false;
     }
 
     return (
@@ -57,12 +63,13 @@ function AdminAddEvent() {
                                         <Form.Control type="date" name="AddEventDate" required placeholder="Enter event date" defaultValue={ ( new Date() ).toISOString().substring( 0, 10 )
                                         } />
                                     </Form.Group>
+                                    <MDBCheckbox name='AddEventCanAddQuestions' id='AddEventCanAddQuestions' label='Event Can Add Questions' />
                                     <br></br>
                                     <Button variant="primary" type="submit">
                                         Submit
                                     </Button>
                                     &nbsp;&nbsp;
-                                    <Button variant="secondary" type="reset">
+                                    <Button variant="primary" type="reset">
                                         Reset
                                     </Button>
                                 </Form>

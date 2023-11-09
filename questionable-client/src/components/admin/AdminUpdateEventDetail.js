@@ -9,6 +9,7 @@ import { fetchEventDetail, modifyEvent } from '../../features/events/eventDetail
 import { Breadcrumb } from 'react-bootstrap';
 import '../../app/App.css';
 import { stringToDate } from '../../features/events/eventDetailSlice';
+import { MDBCheckbox } from 'mdb-react-ui-kit';
 
 const selectEventDetail = state => state.currentEvent;
 
@@ -30,6 +31,7 @@ function AdminUpdateEventDetail() {
         let eventName = e.currentTarget.UpdateEventName.value;
         let eventDate = e.currentTarget.UpdateEventDate.value;
         let eventDescription = e.currentTarget.UpdateEventDescription.value;
+        let eventCanAddQuestions = e.currentTarget.UpdateEventCanAddQuestions.checked ? true : false;
 
         let updatedEvent = {};
         updatedEvent.id = eventId;
@@ -37,6 +39,7 @@ function AdminUpdateEventDetail() {
         updatedEvent.eventDate = eventDate;
         updatedEvent.description = eventDescription;
         updatedEvent.isActive = true;
+        updatedEvent.canAddQuestions = eventCanAddQuestions;
 
         modifyEvent( updatedEvent, dispatch );
 
@@ -49,7 +52,12 @@ function AdminUpdateEventDetail() {
         e.currentTarget.UpdateEventName.value = eventDetailState.currentEvent.name;
         e.currentTarget.UpdateEventDescription.value = eventDetailState.currentEvent.description;
         e.currentTarget.UpdateEventDate.value = stringToDate( eventDetailState.currentEvent.eventDate ).toISOString().substring( 0, 10 );
+        e.currentTarget.UpdateEventCanAddQuestions.checked = eventDetailState.currentEvent.canAddQuestions;
 
+    }
+
+    function handleCheckboxClicked( e ) {
+        dispatch( { type: 'currentEvent/toggleCanAddQuestions', payload: e.target.checked } );
     }
 
     return (
@@ -67,17 +75,18 @@ function AdminUpdateEventDetail() {
                             key={ eventDetailState.currentEvent.id } >
                             <Card.Header as="h4">{ eventDetailState.currentEvent.name }</Card.Header>
                             <Card.Body>
-                                <Form className="UpdateEventDetailForm" id="UpdateEventDetailForm" onSubmit={ ( e ) => handleSubmit( e, eventDetailState.currentEvent.id, dispatch ) } onReset={ handleReset }>
-                                    <Form.Group className="mb-3" controlId="formUpdateEventDetail">
-                                        <Form.Label>Event Name</Form.Label>
-                                        <Form.Control required name="UpdateEventName" type="text" placeholder="Enter event name" defaultValue={ eventDetailState.currentEvent.name } />
+                                <Form className="UpdateEventDetailForm" id="UpdateEventDetailForm" onSubmit={ ( e ) => handleSubmit( e, eventDetailState.currentEvent.id, dispatch ) } onReset={ handleReset }  >
+                                    <Form.Group className="mb-3" >
+                                        <Form.Label htmlFor="UpdateEventName">Event Name</Form.Label>
+                                        <Form.Control required name="UpdateEventName" id="UpdateEventName" type="text" placeholder="Enter event name" defaultValue={ eventDetailState.currentEvent.name } />
                                         <br></br>
-                                        <Form.Label>Event Description</Form.Label>
-                                        <Form.Control required name="UpdateEventDescription" type="text" placeholder="Enter event description" defaultValue={ eventDetailState.currentEvent.description } />
+                                        <Form.Label htmlFor="UpdateEventDescription">Event Description</Form.Label>
+                                        <Form.Control required name="UpdateEventDescription" id="UpdateEventDescription" type="text" placeholder="Enter event description" defaultValue={ eventDetailState.currentEvent.description } />
                                         <br></br>
-                                        <Form.Label>Event Date</Form.Label>
-                                        <Form.Control required name="UpdateEventDate" type="date" placeholder="Enter event date" defaultValue={ stringToDate( eventDetailState.currentEvent.eventDate ).toISOString().substring( 0, 10 ) } />
+                                        <Form.Label htmlFor="UpdateEventDate">Event Date</Form.Label>
+                                        <Form.Control required name="UpdateEventDate" id="UpdateEventDate" type="date" placeholder="Enter event date" defaultValue={ stringToDate( eventDetailState.currentEvent.eventDate ).toISOString().substring( 0, 10 ) } />
                                     </Form.Group>
+                                    <MDBCheckbox name='UpdateEventCanAddQuestions' id='UpdateEventCanAddQuestions' label='Event Can Add Questions' checked={ eventDetailState.currentEvent.canAddQuestions } onChange={ handleCheckboxClicked } />
                                     <br></br>
                                     <Button variant="primary" type="submit">
                                         Submit
