@@ -32,7 +32,7 @@ const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
 
 //const server = express();
-const server = https.createServer( options, server );
+const server = https.createServer( options, express() );
 
 server.set( 'etag', false );
 
