@@ -31,10 +31,9 @@ const options = {
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
 
-//const server = express();
-const server = https.createServer( options, express() );
+const server = express();
 
-//server.set( 'etag', false );
+server.set( 'etag', false );
 
 server.use( cors() );
 
@@ -45,7 +44,9 @@ server.use( express.static( buildPath ) );
 server.use( express.json() );
 server.use( express.urlencoded() );
 
-server.listen( port, hostname, () => {
+const httpsServer = https.createServer( options, server );
+
+httpsServer.listen( port, hostname, () => {
     console.log( `Server running at https://${ hostname }:${ port }/` );
 } );
 
