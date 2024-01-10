@@ -5,26 +5,49 @@ const cors = require( 'cors' )
 const _dirname = path.dirname( "" );
 const buildPath = path.join( _dirname, "../questionable-client/build" );
 require( 'dotenv' ).config( { path: './questionable.env' } );
+const https = require( "https" );
+const fs = require( "fs" );
+const helmet = require( "helmet" );
+const controllerFactory = require( './controllers/ControllerFactory' );
+const { request } = require( 'http' );
+require( './controllers/EventControllers/EventController' );
+
+
+/*
+   listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/question-response.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/question-response.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+*/
+
+const options = {
+    key: fs.readFileSync( "/etc/letsencrypt/live/question-response.com/privkey.pem" ),
+    cert: fs.readFileSync( "/etc/letsencrypt/live/question-response.com/fullchain.pem" )
+};
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
 
-const server = express();
+//const server = express();
+const server = https.createServer( options, server );
+
 server.set( 'etag', false );
-server.listen( port, hostname, () => {
-    console.log( `Server running at http://${ hostname }:${ port }/` );
-} );
 
 server.use( cors() );
+
+server.use( helmet() );
 
 server.use( express.static( buildPath ) );
 
 server.use( express.json() );
 server.use( express.urlencoded() );
 
-const controllerFactory = require( './controllers/ControllerFactory' );
-const { request } = require( 'http' );
-require( './controllers/EventControllers/EventController' );
+server.listen( port, hostname, () => {
+    console.log( `Server running at https://${ hostname }:${ port }/` );
+} );
 
 server.get( '/*' ),
     function ( req, res ) {
