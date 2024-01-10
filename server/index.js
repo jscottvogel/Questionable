@@ -34,7 +34,7 @@ const port = process.env.PORT;
 //const server = express();
 const server = https.createServer( options, express() );
 
-server.set( 'etag', false );
+//server.set( 'etag', false );
 
 server.use( cors() );
 
